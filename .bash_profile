@@ -18,6 +18,7 @@ alias badge="tput bel"
 alias ls='ls -FA'
 ## This next one has a hard time for some reason.
 # alias rm='rm –i'
+alias lsgit='git ls-tree master --name-only '
 alias hidden='ls -d .*'
 alias exit='jobs; exit'
 alias neva='ssh nevawood@Neva.local'
