@@ -173,7 +173,7 @@ if [[ $- == *i* ]]; then
 fi
 
 ######## For AWS and Oanda #################
-source $HOME/.credentials
+test -f $HOME/.credentials && source $HOME/.credentials
 
 ############################################
 ###### THIS MUST BE LAST   #################
