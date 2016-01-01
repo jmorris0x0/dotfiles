@@ -139,6 +139,7 @@ RED="\[\033[0;31m\]"
 LIGHT_RED="\[\033[1;31m\]"
 DARK_GRAY="\[\033[1;30m\]"
 LIGHT_GREEN="\[\033[1;32m\]"
+ORANGE=$'\e[33;40m'
 
 ###### Shell colors #########################
 export LS_OPTIONS='--color=auto'
@@ -160,30 +161,21 @@ if [[ $- == *i* ]]; then
     source ~/.git-prompt.sh
     source ~/.git-completion.bash
     GIT_PS1_SHOWDIRTYSTATE=true
-    export PS1=$LIGHT_GRAY"($CONDA_DEFAULT_ENV)"'$(
+    PS1=$LIGHT_GRAY"($CONDA_DEFAULT_ENV)"'$(
         if [[ $(__git_ps1) =~ \*\)$ ]]
          		# a file has been modified but not added
-    	      then echo "'$YELLOW'"$(__git_ps1 " (%s)")
+    	      then echo "'$RED'"$(__git_ps1 " (%s)")
         elif [[ $(__git_ps1) =~ \+\)$ ]]
             # a file has been added, but not commited
-    	      then echo "'$MAGENTA'"$(__git_ps1 " (%s)")
+    	      then echo "'$ORANGE'"$(__git_ps1 " (%s)")
     	      # the state is clean, changes are commited
-    	      else echo "'$CYAN'"$(__git_ps1 " (%s)")
+    	      else echo "'$GREEN'"$(__git_ps1 " (%s)")
     	    fi)'$LIGHT_GRAY" \w"$LIGHT_GRAY"$ "
+    export PS1
 fi
 
 ######## For AWS and Oanda #################
 test -f $HOME/.credentials && source $HOME/.credentials
-
-############################################
-###### THIS MUST BE LAST   #################
-#
-# Stuff in my bin folder is always first
-#
-export PATH="${HOME}/bin:${PATH}"
-
-####### For Revcaster ######################
-cd /home/scraper
 
 ###### shopt stuff #########################
 # append to the history file, don't overwrite it
@@ -196,10 +188,15 @@ shopt -s cdspell;
 # update the values of LINES and COLUMNS.
 shopt -s checkwinsize
 
+####### History stuff #######################
+# don't put duplicate lines in the history. See bash(1) for more options
+# ... or force ignoredups and ignorespace
+HISTCONTROL=ignoredups:ignorespace
 # for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
 HISTSIZE=1000
 HISTFILESIZE=2000
 
+####### less config ##########################
 # make less more friendly for non-text input files, see lesspipe(1)
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 
@@ -212,3 +209,13 @@ xterm*|rxvt*)
 *)
     ;;
 esac
+
+############################################
+###### THIS SHOULD BE LAST   #################
+#
+# Stuff in my bin folder is always first
+#
+export PATH="${HOME}/bin:${PATH}"
+
+####### For Revcaster ######################
+cd /home/scraper
