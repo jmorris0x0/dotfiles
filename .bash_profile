@@ -31,7 +31,7 @@ if test "$OS" = "Darwin"; then
     export SLIMERJSLAUNCHER=/Applications/Firefox.app/Contents/MacOS/firefox
 
 elif test "$OS" = "Linux"; then
-    continue
+    :
 
     ##### Linux specfic Aliases ##################
     # nothing here for now.
