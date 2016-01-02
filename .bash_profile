@@ -37,7 +37,6 @@ elif test "$OS" = "Linux"; then
     # nothing here for now.
 fi
 
-
 ##### Non-system specfic Aliases #################
 alias badge="tput bel"
 alias hidden='ls -d .*'
