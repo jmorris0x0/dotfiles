@@ -193,8 +193,26 @@ shopt -s checkwinsize
 # ... or force ignoredups and ignorespace
 HISTCONTROL=ignoredups:ignorespace
 # for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
-HISTSIZE=1000
-HISTFILESIZE=2000
+
+# The following is from:
+# http://askubuntu.com/questions/312444/how-to-make-the-command-line-history-apply-across-all-terminals
+HISTSIZE=9000
+HISTFILESIZE=$HISTSIZE
+HISTCONTROL=ignorespace:ignoredups
+
+history() {
+  _bash_history_sync
+  builtin history "$@"
+}
+
+_bash_history_sync() {
+  builtin history -a         #1
+  HISTFILESIZE=$HISTSIZE     #2
+  builtin history -c         #3
+  builtin history -r         #4
+}
+
+PROMPT_COMMAND=_bash_history_sync
 
 ####### less config ##########################
 # make less more friendly for non-text input files, see lesspipe(1)
