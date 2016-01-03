@@ -3,7 +3,6 @@
 test -f ~/.bashrc && source ~/.bashrc
 
 ######### Load system specific stuff #######
-
 OS="$(uname -s)"
 if test "$OS" = "Darwin"; then
 
@@ -74,8 +73,7 @@ fi
 ############ Anaconda #######################
 if [ -d "${HOME}/anaconda" ]; then
     # was added by Anaconda 1.8.0 installer. Use for python 2.7
-    # export PATH="${HOME}/anaconda/bin:$PATH"
-
+    export PATH="${HOME}/anaconda/bin:$PATH"
     # Use for python 3.3:
     export PATH="${HOME}/anaconda/envs/py34/bin:${HOME}/anaconda/bin:${PATH}"
 
@@ -115,6 +113,9 @@ if [ -d "${HOME}/.phpbrew" ]; then
         echo $PHP_VERSION
     fi
     #phpbrew lookup-prefix homebrew
+elif [ -x "$(command -v brew)" ]; then 
+    # export PATH="$(brew --prefix homebrew/php/php56)/bin:$PATH"
+    php --version
 fi
 
 ####### PerlBrew ###########################
@@ -236,3 +237,5 @@ export PATH="${HOME}/bin:${PATH}"
 
 ####### For Revcaster ######################
 cd /home/scraper
+
+# added by An
