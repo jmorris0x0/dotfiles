@@ -1,7 +1,6 @@
 ######### Source ###########################
 # Load .bashrc if it exists
 test -f ~/.bashrc && source ~/.bashrc
-
 ######### Load system specific stuff #######
 OS="$(uname -s)"
 if test "$OS" = "Darwin"; then
@@ -72,13 +71,14 @@ fi
 # http://www.uni-bonn.de/~hmg308/teaching/prog_econ/2013/installation_guide/index.html
 ############ Anaconda #######################
 if [ -d "${HOME}/anaconda" ]; then
-    # was added by Anaconda 1.8.0 installer. Use for python 2.7
-    export PATH="${HOME}/anaconda/bin:$PATH"
-    # Use for python 3.3:
-    export PATH="${HOME}/anaconda/envs/py34/bin:${HOME}/anaconda/bin:${PATH}"
-
+    # export PATH="${HOME}/anaconda/bin:$PATH"
+    # Use for python 3.5:
+    export PATH="${HOME}/anaconda/envs/py35/bin:${HOME}/anaconda/bin:${PATH}"
+    # To create and environment:
+    # conda update conda
+    # conda create -n py35 python=3.5 anaconda
     # To activate this environment, use:
-    source activate py34 &>/dev/null
+    source activate py35 &>/dev/null
     #
     # To deactivate this environment, use:
     # $ source deactivate
@@ -139,7 +139,7 @@ RED="\[\033[0;31m\]"
 LIGHT_RED="\[\033[1;31m\]"
 DARK_GRAY="\[\033[1;30m\]"
 LIGHT_GREEN="\[\033[1;32m\]"
-ORANGE=$'\e[33;40m'
+ORANGE="\[\033[1;40m\]"
 
 ###### Shell colors #########################
 export LS_OPTIONS='--color=auto'
@@ -161,16 +161,20 @@ if [[ $- == *i* ]]; then
     source ~/.git-prompt.sh
     source ~/.git-completion.bash
     GIT_PS1_SHOWDIRTYSTATE=true
-    PS1=$LIGHT_GRAY"($CONDA_DEFAULT_ENV)"'$(
+    if [ -d "${HOME}/anaconda" ]; then
+        PS1=$LIGHT_BLUE"<$CONDA_DEFAULT_ENV>"
+    fi
+
+    PS1=$PS1""'$(
         if [[ $(__git_ps1) =~ \*\)$ ]]
          		# a file has been modified but not added
-    	      then echo "'$RED'"$(__git_ps1 " (%s)")
+    	      then echo "'$RED'"$(__git_ps1 " <%s>")
         elif [[ $(__git_ps1) =~ \+\)$ ]]
-            # a file has been added, but not commited
-    	      then echo "'$ORANGE'"$(__git_ps1 " (%s)")
+              # a file has been added, but not commited
+    	      then echo "'$BROWN'"$(__git_ps1 " <%s>")
     	      # the state is clean, changes are commited
-    	      else echo "'$GREEN'"$(__git_ps1 " (%s)")
-    	    fi)'$LIGHT_GRAY" \w"$LIGHT_GRAY"$ "
+    	      else echo "'$GREEN'"$(__git_ps1 " <%s>")
+    	    fi)'$LIGHT_GRAY" \w"$LIGHT_GRAY"⚡️ "
     export PS1
 fi
 
@@ -198,7 +202,6 @@ HISTCONTROL=ignoredups:ignorespace
 # http://askubuntu.com/questions/312444/how-to-make-the-command-line-history-apply-across-all-terminals
 HISTSIZE=9000
 HISTFILESIZE=$HISTSIZE
-HISTCONTROL=ignorespace:ignoredups
 
 history() {
   _bash_history_sync
@@ -206,10 +209,10 @@ history() {
 }
 
 _bash_history_sync() {
-  builtin history -a         #1
-  HISTFILESIZE=$HISTSIZE     #2
-  builtin history -c         #3
-  builtin history -r         #4
+  builtin history -a
+  HISTFILESIZE=$HISTSIZE
+  builtin history -c
+  builtin history -r
 }
 
 PROMPT_COMMAND=_bash_history_sync
@@ -238,4 +241,3 @@ export PATH="${HOME}/bin:${PATH}"
 ####### For Revcaster ######################
 cd /home/scraper
 
-# added by An
