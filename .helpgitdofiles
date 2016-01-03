@@ -1,7 +1,16 @@
 I used the following tutorial to set up dotfiles on github:
 https://www.foraker.com/blog/get-your-dotfiles-under-control
 
+1: cd to any repos
+2: git config user.name "jmorris0x0"
+
+
 After cloning, you will need to set your git user:
 git config credential.helper store
 
-
+cd ~
+mkdir dotfiles
+cd dotfiles
+git clone https://github.com/jmorris0x0/dotfiles.git .
+ 
+mv dotfiles/* dotfiles/.* .
