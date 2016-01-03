@@ -200,7 +200,7 @@ HISTCONTROL=ignoredups:ignorespace
 
 # The following is from:
 # http://askubuntu.com/questions/312444/how-to-make-the-command-line-history-apply-across-all-terminals
-HISTSIZE=9000
+HISTSIZE=18000
 HISTFILESIZE=$HISTSIZE
 
 history() {
