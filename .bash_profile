@@ -162,19 +162,22 @@ if [[ $- == *i* ]]; then
     source ~/.git-completion.bash
     GIT_PS1_SHOWDIRTYSTATE=true
     if [ -d "${HOME}/anaconda" ]; then
-        PS1=$LIGHT_BLUE"<$CONDA_DEFAULT_ENV>"
+        PS1=$LIGHT_BLUE"<$CONDA_DEFAULT_ENV> "
+    else 
+        PS1=''
     fi
 
-    PS1=$PS1""'$(
+    PS1=$PS1'$(
         if [[ $(__git_ps1) =~ \*\)$ ]]
-         		# a file has been modified but not added
-    	      then echo "'$RED'"$(__git_ps1 " <%s>")
+              # a file has been modified but not added
+              then echo "'$RED'"$(__git_ps1 "<%s>")
         elif [[ $(__git_ps1) =~ \+\)$ ]]
               # a file has been added, but not commited
-    	      then echo "'$BROWN'"$(__git_ps1 " <%s>")
-    	      # the state is clean, changes are commited
-    	      else echo "'$GREEN'"$(__git_ps1 " <%s>")
-    	    fi)'$LIGHT_GRAY" \w"$LIGHT_GRAY"⚡️ "
+              then echo "'$BROWN'"$(__git_ps1 "<%s>")
+              # the state is clean, changes are commited
+        else echo "'$GREEN'"$(__git_ps1 "<%s>")
+        fi)'$LIGHT_GRAY" \w\342\232\241 "
+# $LIGHT_GRAY"⚡️ "
     export PS1
 fi
 
