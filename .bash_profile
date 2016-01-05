@@ -157,14 +157,17 @@ alias gitupdate='echo "fetch...rebase...push" && git fetch upstream && git rebas
 # }
 #export PS1="($CONDA_DEFAULT_ENV)\w\[\033[32m\]\$(parse_git_branch)\[\033[00m\]$ "
 
+#PS1=$(whoami)
+PS1=''
+
 if [[ $- == *i* ]]; then
     source ~/.git-prompt.sh
     source ~/.git-completion.bash
     GIT_PS1_SHOWDIRTYSTATE=true
     if [ -d "${HOME}/anaconda" ]; then
-        PS1=$LIGHT_BLUE"<$CONDA_DEFAULT_ENV> "
+        PS1=$PS1$LIGHT_BLUE"<$CONDA_DEFAULT_ENV> "
     else 
-        PS1=''
+        PS1=$PS1''
     fi
 
     PS1=$PS1'$(
