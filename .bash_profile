@@ -15,6 +15,7 @@ if test "$OS" = "Darwin"; then
     alias top='top -s3 -o cpu -R -F'
     alias neva='ssh nevawood@Neva.local'
     alias data='ssh jonathan@dataserve.local'
+    alias instance='ssh -i "cascadekey2.pem" ubuntu@ec2-54-215-24-187.us-west-1.compute.amazonaws.com'
     #alias xvfb-run='Xvfb :1337 & export DISPLAY=:1337 &'
     alias xvfb-run='Xvfb &'
     #alias matlab='/Applications/MATLAB_R2012b.app/bin/matlab -nojvm, -nodesktop, -nosplash'
@@ -157,6 +158,14 @@ alias gitupdate='echo "fetch...rebase...push" && git fetch upstream && git rebas
 # }
 #export PS1="($CONDA_DEFAULT_ENV)\w\[\033[32m\]\$(parse_git_branch)\[\033[00m\]$ "
 
+function git-unpushed {
+    brinfo=$(git branch -v | grep git-branch-name)
+    if [[ $brinfo =~ ("[ahead "([[:digit:]]*)]) ]]
+    then
+        echo "(${BASH_REMATCH[2]})"
+    fi
+}
+
 #PS1=$(whoami)
 PS1=''
 
@@ -178,7 +187,7 @@ if [[ $- == *i* ]]; then
               # a file has been added, but not commited
               then echo "'$BROWN'"$(__git_ps1 "<%s>")
               # the state is clean, changes are commited
-        else echo "'$GREEN'"$(__git_ps1 "<%s>")
+        else echo "'$GREEN'"$(__git_ps1 "<%s:$(git-unpushed)>")
         fi)'$LIGHT_GRAY" \w\342\232\241 "
 # $LIGHT_GRAY"⚡️ "
     export PS1
