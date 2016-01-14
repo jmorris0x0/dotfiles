@@ -158,8 +158,12 @@ alias gitupdate='echo "fetch...rebase...push" && git fetch upstream && git rebas
 # }
 #export PS1="($CONDA_DEFAULT_ENV)\w\[\033[32m\]\$(parse_git_branch)\[\033[00m\]$ "
 
+function git-branch-name {
+    echo $(git rev-parse --abbrev-ref HEAD)
+}
+
 function git-unpushed {
-    brinfo=$(git branch -v | grep git-branch-name)
+    brinfo=$(git branch -v | grep -F -f <(git-branch-name))
     if [[ $brinfo =~ ("[ahead "([[:digit:]]*)]) ]]
     then
         echo "(${BASH_REMATCH[2]})"
