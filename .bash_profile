@@ -15,7 +15,7 @@ if test "$OS" = "Darwin"; then
     alias top='top -s3 -o cpu -R -F'
     alias neva='ssh nevawood@Neva.local'
     alias data='ssh jonathan@dataserve.local'
-    alias instance='ssh -i "cascadekey2.pem" ubuntu@ec2-54-215-24-187.us-west-1.compute.amazonaws.com'
+    alias instance='ssh -i "cascadekey2.pem" root@ec2-54-176-104-190.us-west-1.compute.amazonaws.com'
     #alias xvfb-run='Xvfb :1337 & export DISPLAY=:1337 &'
     alias xvfb-run='Xvfb &'
     #alias matlab='/Applications/MATLAB_R2012b.app/bin/matlab -nojvm, -nodesktop, -nosplash'
@@ -182,10 +182,10 @@ if [[ $- == *i* ]]; then
     PS1=$PS1'$(
         if [[ $(__git_ps1) =~ \*\)$ ]]
               # a file has been modified but not added
-              then echo "'$RED'"$(__git_ps1 "<%s>")
+              then echo "'$RED'"$(__git_ps1 "<%s:$(git-unpushed)>")
         elif [[ $(__git_ps1) =~ \+\)$ ]]
               # a file has been added, but not commited
-              then echo "'$BROWN'"$(__git_ps1 "<%s>")
+              then echo "'$BROWN'"$(__git_ps1 "<%s:$(git-unpushed)>")
               # the state is clean, changes are commited
         else echo "'$GREEN'"$(__git_ps1 "<%s:$(git-unpushed)>")
         fi)'$LIGHT_GRAY" \w\342\232\241 "
