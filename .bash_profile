@@ -45,6 +45,8 @@ alias lsgit='git ls-tree master --name-only '
 alias pull='git pull -s recursive -X theirs'
 # IP addresses
 alias ip="dig +short myip.opendns.com @resolver1.opendns.com"
+alias l="ls"
+alias sl="ls"
 
 ###### Always use color output for `ls` #########
 if ls --color > /dev/null 2>&1; then # GNU `ls`
