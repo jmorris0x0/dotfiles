@@ -165,10 +165,12 @@ function git-branch-name {
 }
 
 function git-unpushed {
-    brinfo=$(git branch -v | grep -F -f <(git-branch-name))
-    if [[ $brinfo =~ ("[ahead "([[:digit:]]*)]) ]]
-    then
-        echo "(${BASH_REMATCH[2]})"
+    if [ -d .git ]; then
+        brinfo=$(git branch -v | grep -F -f <(git-branch-name))
+        if [[ $brinfo =~ ("[ahead "([[:digit:]]*)]) ]]
+        then
+            echo "(${BASH_REMATCH[2]})"
+        fi
     fi
 }
 
