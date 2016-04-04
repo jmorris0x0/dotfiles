@@ -1,6 +1,35 @@
 ######### Source ###########################
 # Load .bashrc if it exists
 test -f ~/.bashrc && source ~/.bashrc
+######### project switching functions ######
+function legacy {
+    export PROJECT_DIR="/home/scraper"
+    cd $PROJECT_DIR
+    if grep -Fxq "legacy" $HOME/.current-project
+    then
+        echo "Already on project: legacy"
+    else
+        echo "Switching project to: legacy"
+        mv $HOME/.aws_bak $HOME/.aws
+        rm $HOME/.current-project
+        echo "legacy" > $HOME/.current-project
+    fi
+}
+
+function rev2 {
+    export PROJECT_DIR="/home/revcaster-shopper"
+    cd $PROJECT_DIR
+    if grep -Fxq "rev2" $HOME/.current-project 
+    then
+        echo "Already on project: rev2"
+    else
+        echo "Switching to project: rev2"
+        mv $HOME/.aws $HOME/.aws_bak
+        rm $HOME/.current-project
+        echo "rev2" > $HOME/.current-project
+    fi
+}
+
 ######### Load system specific stuff #######
 OS="$(uname -s)"
 if test "$OS" = "Darwin"; then
@@ -15,14 +44,16 @@ if test "$OS" = "Darwin"; then
     alias top='top -s3 -o cpu -R -F'
     alias neva='ssh nevawood@Neva.local'
     alias data='ssh jonathan@dataserve.local'
-    alias instance='ssh -i "cascadekey2.pem" root@ec2-54-176-104-190.us-west-1.compute.amazonaws.com'
+    alias instance='ssh -i "cascadekey2.pem" root@ec2-54-177-126-187.us-west-1.compute.amazonaws.com'
     #alias xvfb-run='Xvfb :1337 & export DISPLAY=:1337 &'
     alias xvfb-run='Xvfb &'
     #alias matlab='/Applications/MATLAB_R2012b.app/bin/matlab -nojvm, -nodesktop, -nosplash'
     # Show/hide hidden files in Finder
     alias show="defaults write com.apple.finder AppleShowAllFiles -bool true && killall Finder"
     alias hide="defaults write com.apple.finder AppleShowAllFiles -bool false && killall Finder"    
-    
+
+    alias legacy="legacy"
+    alias rev2="rev2"    
     # alias localip="ipconfig getifaddr en0"
     # alias ips="ifconfig -a | grep -o 'inet6\? \(addr:\)\?\s\?\(\(\([0-9]\+\.\)\{3\}[0-9]\+\)\|[a-fA-F0-9:]\+\)' | awk '{ sub(/inet6? (addr:)? ?/, \"\"); print }'"
 
@@ -47,6 +78,9 @@ alias pull='git pull -s recursive -X theirs'
 alias ip="dig +short myip.opendns.com @resolver1.opendns.com"
 alias l="ls"
 alias sl="ls"
+alias scrapers3="cd $HOME && rm -fr $HOME/deploy-old > /dev/null && mv $HOME/deploy $HOME/deploy-old > /dev/null && mkdir $HOME/deploy && cd $HOME/deploy && aws --profile Rev2 s3 cp s3://revcaster.develop.deployment-artifacts/revcaster-php-shopper/deploy.zip $HOME/deploy/deploy.zip --region us-west-2 && unzip $HOME/deploy/deploy.zip"
+
+alias deploy="cd /home && rm -fr /home/deploy-old > /dev/null && mv /home/deploy /home/deploy-old > /dev/null && mkdir /home/deploy && cd /home/deploy && aws --profile Rev2 s3 cp s3://revcaster.develop.deployment-artifacts/revcaster-php-shopper/deploy.zip /home/deploy/deploy.zip --region us-west-2 && unzip /home/deploy/deploy.zip"
 
 ###### Always use color output for `ls` #########
 if ls --color > /dev/null 2>&1; then # GNU `ls`
@@ -76,12 +110,12 @@ fi
 if [ -d "${HOME}/anaconda" ]; then
     # export PATH="${HOME}/anaconda/bin:$PATH"
     # Use for python 3.5:
-    export PATH="${HOME}/anaconda/envs/py35/bin:${HOME}/anaconda/bin:${PATH}"
+    export PATH="${HOME}/anaconda/envs/py34/bin:${HOME}/anaconda/bin:${PATH}"
     # To create and environment:
     # conda update conda
     # conda create -n py35 python=3.5 anaconda
     # To activate this environment, use:
-    source activate py35 &>/dev/null
+    source activate py34 &>/dev/null
     #
     # To deactivate this environment, use:
     # $ source deactivate
@@ -262,5 +296,11 @@ esac
 export PATH="${HOME}/bin:${PATH}"
 
 ####### For Revcaster ######################
-cd /home/scraper
+cd $PROJECT_DIR
 
+
+# added by Anaconda3 2.5.0 installer
+# export PATH="//anaconda/bin:$PATH"
+
+# added by Anaconda3 2.5.0 installer
+# export PATH="/Users/jonathan/anaconda/bin:$PATH"

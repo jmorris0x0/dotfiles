@@ -1,4 +1,4 @@
-set nocompatible              " be iMproved, required
+set nocompatible              " Needs to be improved, required
 filetype off                  " required
 
 " set the runtime path to include Vundle and initialize
@@ -32,31 +32,39 @@ Plugin 'VundleVim/Vundle.vim'
 " Avoid a name conflict with L9
 "Plugin 'user/L9', {'name': 'newL9'}
 
+" clojure
 Plugin 'tpope/vim-fireplace'
 Plugin 'tpope/vim-classpath'
 Plugin 'guns/vim-clojure-static'
 Plugin 'vim-scripts/paredit.vim'
-
 Plugin 'kien/rainbow_parentheses.vim'
+Plugin 'tpope/vim-leiningen'
 
-Plugin 'ratazzi/blackboard.vim'
-
-Plugin 'desert-warm-256'
-
-"Plugin 'scrooloose/nerdtree'
-
-Plugin 'ervandew/supertab'
-
-Plugin 'vim-scripts/SearchComplete'
-
-Plugin 'sickill/vim-monokai'
-
-Plugin 'morhetz/gruvbox'
-
-Plugin 'flazz/vim-colorschemes'
-
+" git
+" Plugin 'gregsexton/gitv'
+" Plugin 'tpope/vim-git'
+" Plugin 'tpope/vim-fugitive'
 "Plugin 'airblade/vim-gitgutter' 
 
+" colorschemes
+Plugin 'altercation/vim-colors-solarized'
+Plugin 'endel/vim-github-colorscheme'
+Plugin 'jgdavey/vim-railscasts'
+Plugin 'jpo/vim-railscasts-theme'
+Plugin 'therubymug/vim-pyte'
+Plugin 'tpope/vim-vividchalk'
+Plugin 'croaker/mustang-vim'
+Plugin 'wgibbs/vim-irblack'
+Plugin 'ratazzi/blackboard.vim'
+Plugin 'desert-warm-256'
+Plugin 'sickill/vim-monokai'
+Plugin 'flazz/vim-colorschemes'
+
+" Plugin 'scrooloose/nerdtree'
+Plugin 'ervandew/supertab'
+" Plugin 'vim-scripts/SearchComplete'
+" Plugin 'morhetz/gruvbox'
+Plugin 'captbaritone/better-indent-support-for-php-with-html'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -80,6 +88,12 @@ set background=dark
 colorscheme blackboard
 " colorscheme solarized
 
+if &t_Co > 2 || has("gui_running")
+  " Enable syntax highlighting
+  syntax on
+endif
+
+
 "if has('gui_running')
 "    colorscheme ratazzi
 "elseif &t_Co > 255 
@@ -97,7 +111,7 @@ colorscheme blackboard
 "colorscheme solarized
 
 " activates syntax highlighting among other things
-syntax on
+" syntax on
 
 " allows you to deal with multiple unsaved
 " buffers simultaneously without resorting
@@ -167,6 +181,16 @@ set scrolloff=1
 " Clear last search highlighting
 map <Space> :noh<cr>
 
+" Remap escape key to jj
+:imap jj <Esc>
+
+" set nowrap
+" set showcmd
+" set list
+" set ttymouse=xterm2
+set nobackup
+set noswapfile
+
 " ================ Persistent Undo ==================
 " Keep undo history across sessions, by storing in file.
 " Only works all the time.
@@ -180,3 +204,16 @@ endif
 "set list listchars=tab:\ \ ,trail:·
 
 
+" Evaluate Clojure buffers on load
+autocmd BufRead *.clj try | silent! Require | catch /^Fireplace/ | endtry
+
+" rainbow_parentheses.vim
+autocmd VimEnter * RainbowParenthesesToggle
+autocmd Syntax * RainbowParenthesesLoadRound
+autocmd Syntax * RainbowParenthesesLoadSquare
+autocmd Syntax * RainbowParenthesesLoadBraces
+
+
+" autocmd vimenter * NERDTree
+
+:set autoindent
