@@ -291,7 +291,7 @@ if [[ $- == *i* ]]; then
               then echo "'$BROWN'"$(__git_ps1 "<%s:$(git-unpushed)>")
               # the state is clean, changes are commited
         else echo "'$GREEN'"$(__git_ps1 "<%s:$(git-unpushed)>")
-        fi)'$LIGHT_GRAY" \w \342\232\241 "
+        fi)'$LIGHT_GRAY" \w \342\232\241\e[m "
     export PS1
 fi
         # fi)'$LIGHT_GRAY" \w  ["'$timer_show'" s] \342\232\241 "
