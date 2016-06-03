@@ -122,8 +122,8 @@ set hidden
 " see for yourself
 set backspace=indent,eol,start
 
-" Makes it so that you can paste from the buffer
-set paste
+" Never set this in this file. It screws things up.
+" set paste
 
 " TABS AND SPACES
 

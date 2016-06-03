@@ -60,6 +60,10 @@ if test "$OS" = "Darwin"; then
     ####### RevCaster Stuff ####################
     export SLIMERJSLAUNCHER=/Applications/Firefox.app/Contents/MacOS/firefox
 
+   ###### Connect to docker instance ############
+   # http://stackoverflow.com/questions/32744780/install-docker-toolbox-on-a-mac-via-command-line
+   eval "$(docker-machine env defaultBox)" 
+
 elif test "$OS" = "Linux"; then
     :
 
@@ -159,6 +163,8 @@ fi
 if [ -d "${HOME}/perl5" ]; then
     source ~/perl5/perlbrew/etc/bashrc
 fi
+####### For Haskell #########################
+# export PATH="/Users/jonathan/.local/bin:$PATH"
 
 ######## Fancy Terminal Colors ##############
 MAGENTA="\[\033[0;35m\]"
@@ -186,6 +192,58 @@ export LSCOLORS=gxfxbEaEBxxEhEhBaDaCaD
 ###### Environmental variables #############
 export EDITOR=vim
 
+###### For timing Bash commands ############
+# BCT_AT_PROMPT=1
+# function BCTPreCommand() {
+#   if [ -z "$BCT_AT_PROMPT" ]; then
+#     return
+#   fi
+#   unset BCT_AT_PROMPT
+#   BCT_COMMAND_START_TIME=$(eval $BCTTime)
+# }
+# trap 'BCTPreCommand' DEBUG
+
+
+
+# timer_stop() {
+#   timer_show= $(($SECONDS - $timer))
+#   unset timer
+#   echo "timer_stop"
+#   # echo $timer_show
+# }
+
+# trap '$(timer_start)' DEBUG
+
+####### History stuff #######################
+# don't put duplicate lines in the history. See bash(1) for more options
+# ... or force ignoredups and ignorespace
+HISTCONTROL=ignoredups:ignorespace
+# for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
+
+# The following is from:
+# http://askubuntu.com/questions/312444/how-to-make-the-command-line-history-apply-across-all-terminals
+# Keeps history synced between all open terminals
+HISTSIZE=10000
+HISTFILESIZE=$HISTSIZE
+HISTTIMEFORMAT="%d/%m/%y %T "
+
+history() {
+  _bash_history_sync
+  builtin history "$@"
+}
+
+_bash_history_sync() {
+  builtin history -a
+  HISTFILESIZE=$HISTSIZE
+  builtin history -c
+  builtin history -r
+}
+
+# Write a copy of time-stamped history to a daily log file.
+PROMPT_COMMAND='_bash_history_sync; if [ "$(id -u)" -ne 0 ]; then echo "$(date "+%Y-%m-%d.%H:%M:%S") $(pwd) $(history 1)" >> ~/.logs/bash-history-$(date "+%Y-%m-%d").log; fi'
+# PROMPT_COMMAND='timer_stop'
+#timer_stop
+
 ######### Added for Git ####################
 alias gitupdate='echo "fetch...rebase...push" && git fetch upstream && git rebase upstream/master && git push -f origin master'
 # export PS1='[\w$(__git_ps1)]\$ '
@@ -195,7 +253,7 @@ alias gitupdate='echo "fetch...rebase...push" && git fetch upstream && git rebas
 #export PS1="($CONDA_DEFAULT_ENV)\w\[\033[32m\]\$(parse_git_branch)\[\033[00m\]$ "
 
 function git-branch-name {
-    echo $(git rev-parse --abbrev-ref HEAD)
+    echo $(git rev-parse --abbrev-ref HEAD 2>/dev/null)
 }
 
 function git-unpushed {
@@ -230,11 +288,10 @@ if [[ $- == *i* ]]; then
               then echo "'$BROWN'"$(__git_ps1 "<%s:$(git-unpushed)>")
               # the state is clean, changes are commited
         else echo "'$GREEN'"$(__git_ps1 "<%s:$(git-unpushed)>")
-        fi)'$LIGHT_GRAY" \w\342\232\241 "
-# $LIGHT_GRAY"⚡️ "
+        fi)'$LIGHT_GRAY" \w \342\232\241 "
     export PS1
 fi
-
+        # fi)'$LIGHT_GRAY" \w  ["'$timer_show'" s] \342\232\241 "
 ######## For AWS and Oanda #################
 test -f $HOME/.credentials && source $HOME/.credentials
 
@@ -249,31 +306,6 @@ shopt -s cdspell;
 # update the values of LINES and COLUMNS.
 shopt -s checkwinsize
 
-####### History stuff #######################
-# don't put duplicate lines in the history. See bash(1) for more options
-# ... or force ignoredups and ignorespace
-HISTCONTROL=ignoredups:ignorespace
-# for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
-
-# The following is from:
-# http://askubuntu.com/questions/312444/how-to-make-the-command-line-history-apply-across-all-terminals
-HISTSIZE=18000
-HISTFILESIZE=$HISTSIZE
-
-history() {
-  _bash_history_sync
-  builtin history "$@"
-}
-
-_bash_history_sync() {
-  builtin history -a
-  HISTFILESIZE=$HISTSIZE
-  builtin history -c
-  builtin history -r
-}
-
-PROMPT_COMMAND=_bash_history_sync
-
 ####### less config ##########################
 # make less more friendly for non-text input files, see lesspipe(1)
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
@@ -287,8 +319,6 @@ xterm*|rxvt*)
 *)
     ;;
 esac
-
-############################################
 ###### THIS SHOULD BE LAST   #################
 #
 # Stuff in my bin folder is always first
