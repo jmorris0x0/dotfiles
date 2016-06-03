@@ -239,6 +239,9 @@ _bash_history_sync() {
   builtin history -r
 }
 
+# Create history loggin folder if does not exist
+mkdir -p $HOME/.logs
+
 # Write a copy of time-stamped history to a daily log file.
 PROMPT_COMMAND='_bash_history_sync; if [ "$(id -u)" -ne 0 ]; then echo "$(date "+%Y-%m-%d.%H:%M:%S") $(pwd) $(history 1)" >> ~/.logs/bash-history-$(date "+%Y-%m-%d").log; fi'
 # PROMPT_COMMAND='timer_stop'
