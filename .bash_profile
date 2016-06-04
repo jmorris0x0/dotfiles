@@ -62,7 +62,9 @@ if test "$OS" = "Darwin"; then
 
    ###### Connect to docker instance ############
    # http://stackoverflow.com/questions/32744780/install-docker-toolbox-on-a-mac-via-command-line
-   eval "$(docker-machine env defaultBox)" 
+    if [ -x "$(command -v docker-machine)" ]; then
+        eval "$(docker-machine env defaultBox)"
+    fi
 
 elif test "$OS" = "Linux"; then
     :
