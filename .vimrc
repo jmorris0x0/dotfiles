@@ -34,7 +34,7 @@ Plugin 'VundleVim/Vundle.vim'
 
 " clojure
 Plugin 'tpope/vim-fireplace'
-Plugin 'tpope/vim-classpath'
+"Plugin 'tpope/vim-classpath'
 Plugin 'guns/vim-clojure-static'
 Plugin 'vim-scripts/paredit.vim'
 Plugin 'kien/rainbow_parentheses.vim'
@@ -216,4 +216,7 @@ autocmd Syntax * RainbowParenthesesLoadBraces
 
 " autocmd vimenter * NERDTree
 
-:set autoindent
+set autoindent
+
+" Don't restore old text after closing
+set t_ti= t_te=

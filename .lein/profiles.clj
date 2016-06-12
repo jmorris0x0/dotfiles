@@ -1,4 +1,6 @@
-{:user {:plugins      [[jonase/eastwood "0.2.3"]
+{:user {:plugins      [[lein-exec "0.3.6"]
+                       ; to execute Clojure scripts
+                       [jonase/eastwood "0.2.3"]
                       ; Clojure linter
                       ; https://github.com/jonase/eastwood
                       ; To lint: $ lein eastwood
@@ -21,7 +23,7 @@
                       ; [refactor-nrepl "2.1.0-alpha1"]
                       ; nREPL middleware to support editor-agnostic refactoring
                       ; https://github.com/clojure-emacs/refactor-nrepl
-                      [lein-ancient "0.6.9"]
+                      [lein-ancient "0.6.10"]
                       ; Check your Projects for outdated Dependencies
                       ; https://github.com/xsc/lein-ancient
                       ; $ lein ancient
@@ -39,7 +41,7 @@
                       ; Network repl
                       [org.clojure/tools.namespace "0.2.11"]
                       ;
-                      [io.aviso/pretty "0.1.24"]
+                      [io.aviso/pretty "0.1.26"]
                       ; Cleans up stacktraces
                       [spyscope "0.1.5"]
                       ; Allows debugging: prefix any form with #spy/p or #spy/d
@@ -53,7 +55,7 @@
                       ; Namespace browser:
                       ; (use 'clj-ns-browser.sdoc)
                       ; (sdoc) ; This actually loads it.
-                      [im.chit/vinyasa "0.4.3"]
+                      [im.chit/vinyasa "0.4.7"]
                       ; Injects code when changing namespaces.
                       [alembic "0.3.2"]
                       [lein-light-nrepl "0.3.2"]
@@ -80,25 +82,26 @@
                   'clojure.repl
                   'clojure.main
                   'clojure.tools.trace)
-          (inject/in ;; the default injected namespace is `.`
+         (inject/in ;; the default injected namespace is `.`
 
-          ;         ;; note that `:refer, :all and :exclude can be used
-          ;         [vinyasa.inject :refer [inject [in inject-in]]]
-          ;         [vinyasa.lein :exclude [*project*]]
+               ;; note that `:refer, :all and :exclude can be used
+               [vinyasa.inject :refer [inject [in inject-in]]]
 
-          ;         ;; imports all functions in vinyasa.pull
-          ;         [alembic.still [distill pull]]
+               ;; inject clojure.repl into clojure.core 
+               clojure.core
+               [clojure.repl]
+               ;; imports all functions in vinyasa.pull into `.`
+               ;;[vinyasa.maven pull]
 
-          ;         ;; inject into clojure.core
-          ;         clojure.core
-          ;         [vinyasa.reflection .> .? .* .% .%> .& .>ns .>var]
+               ;; inject into clojure.core
+               ;;clojure.core
+               ;;[vinyasa.reflection .> .? .* .% .%> .& .>ns .>var]
 
-          ;         ;; inject into clojure.core with prefix
-          ;         clojure.core >
-          ;         [clojure.pprint pprint]
-          ;         [clojure.java.shell sh]
-          )
-
+               ;; inject into clojure.core with prefix
+               ;;clojure.core >
+               ;;[clojure.pprint pprint]
+               ;;[clojure.java.shell sh]
+               ) 
         ]}}
 ;
 ; TODO: Create repl profile.

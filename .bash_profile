@@ -17,7 +17,7 @@ function legacy {
 }
 
 function rev2 {
-    export PROJECT_DIR="/home/revcaster-shopper"
+    export PROJECT_DIR="$HOME/code/revcaster-shopper"
     cd $PROJECT_DIR
     if grep -Fxq "rev2" $HOME/.current-project 
     then
@@ -244,8 +244,17 @@ _bash_history_sync() {
 # Create history loggin folder if does not exist
 mkdir -p $HOME/.logs
 
+history_log() {
+  if [ "$(id -u)" -ne 0 ];
+    then echo "$(date "+%Y-%m-%d.%H:%M:%S") $(pwd) $(history 1)" >> ~/.logs/bash-history-$(date "+%Y-%m-%d").log;
+    fi
+}
+# MIght want to try this as well:
+# http://www.pointsoftware.ch/howto-bash-audit-command-logger/
+# https://debian-administration.org/article/543/Bash_eternal_history
+
 # Write a copy of time-stamped history to a daily log file.
-PROMPT_COMMAND='_bash_history_sync; if [ "$(id -u)" -ne 0 ]; then echo "$(date "+%Y-%m-%d.%H:%M:%S") $(pwd) $(history 1)" >> ~/.logs/bash-history-$(date "+%Y-%m-%d").log; fi'
+PROMPT_COMMAND=history_log
 # PROMPT_COMMAND='timer_stop'
 #timer_stop
 
@@ -293,7 +302,7 @@ if [[ $- == *i* ]]; then
               then echo "'$BROWN'"$(__git_ps1 "<%s:$(git-unpushed)>")
               # the state is clean, changes are commited
         else echo "'$GREEN'"$(__git_ps1 "<%s:$(git-unpushed)>")
-        fi)'$LIGHT_GRAY"\[ \w \342\232\241\e[m\] "
+        fi)'$LIGHT_GRAY" \w\[\342\232\241\e[m\] "
     export PS1
 fi
         # fi)'$LIGHT_GRAY" \w  ["'$timer_show'" s] \342\232\241 "
@@ -339,3 +348,5 @@ cd $PROJECT_DIR
 
 # added by Anaconda3 2.5.0 installer
 # export PATH="/Users/jonathan/anaconda/bin:$PATH"
+
+export KUBERNETES_PROVIDER='aws'
