@@ -137,7 +137,7 @@ set shiftwidth=4 " Indents will have a width of 4
 set smarttab  " make tab insert indents instead of tabs at the start  of linea
 
 " LINE NUMBERS
-:set number
+set number
 
 "autocmd StdinReadPre * let s:std_in=1
 "autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
@@ -203,7 +203,6 @@ endif
 " Display tabs and trailing spaces visually
 "set list listchars=tab:\ \ ,trail:·
 
-
 " Evaluate Clojure buffers on load
 autocmd BufRead *.clj try | silent! Require | catch /^Fireplace/ | endtry
 
@@ -220,3 +219,4 @@ set autoindent
 
 " Don't restore old text after closing
 set t_ti= t_te=
+
