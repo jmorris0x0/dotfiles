@@ -31,7 +31,9 @@
                       ; $ lein ancient check-profiles
                       ; $ lein ancient upgrade :interactive
                       ; $ lein ancient upgrade :exclude crypto
-                      [io.aviso/pretty "0.1.24"]]
+        ;;              [io.aviso/pretty "0.1.26"]
+                       [lein-cljfmt "0.5.3"]        
+        ]
                       ; Cleans up stacktraces
                       ; https://github.com/AvisoNovate/pretty/blob/master/docs/index.rst
 
@@ -41,7 +43,7 @@
                       ; Network repl
                       [org.clojure/tools.namespace "0.2.11"]
                       ;
-                      [io.aviso/pretty "0.1.26"]
+      ;;                [io.aviso/pretty "0.1.26"]
                       ; Cleans up stacktraces
                       [spyscope "0.1.5"]
                       ; Allows debugging: prefix any form with #spy/p or #spy/d
@@ -51,14 +53,14 @@
                       ; Traces code.
                       ; (defn ^:dynamic fib[n] (if (< n 2) n (+ (fib (- n 1)) (fib (- n 2)))))
                       ; (dotrace [fib] (fib 3))
-                      [clj-ns-browser "1.3.1"]
+      ;;                [clj-ns-browser "1.3.1"]
                       ; Namespace browser:
                       ; (use 'clj-ns-browser.sdoc)
                       ; (sdoc) ; This actually loads it.
                       [im.chit/vinyasa "0.4.7"]
                       ; Injects code when changing namespaces.
                       [alembic "0.3.2"]
-                      [lein-light-nrepl "0.3.2"]
+     ;;                 [lein-light-nrepl "0.3.2"]
                       ;
                       ]
 
@@ -71,14 +73,14 @@
                        ;; If nREPL takes too long to load it may timeout,
                        ;; Defaults to 30000 (30 seconds)
                        ; :init (boot.core/load-data-readers!)
-                       :nrepl-middleware [lighttable.nrepl.handler/lighttable-ops]
+   ;;                    :nrepl-middleware [lighttable.nrepl.handler/lighttable-ops]
                        }
 
         :injections
         ; Load these automatically into whatever namespace you are using:
         [(require 'spyscope.core
                   '[vinyasa.inject :as inject]
-                  'io.aviso.repl
+;                  'io.aviso.repl
                   'clojure.repl
                   'clojure.main
                   'clojure.tools.trace)
@@ -88,7 +90,7 @@
                [vinyasa.inject :refer [inject [in inject-in]]]
 
                ;; inject clojure.repl into clojure.core 
-               clojure.core
+               clojure.core 
                [clojure.repl]
                ;; imports all functions in vinyasa.pull into `.`
                ;;[vinyasa.maven pull]

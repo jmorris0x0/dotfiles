@@ -56,6 +56,9 @@ if test "$OS" = "Darwin"; then
     alias rev2="rev2"    
     # alias localip="ipconfig getifaddr en0"
     # alias ips="ifconfig -a | grep -o 'inet6\? \(addr:\)\?\s\?\(\(\([0-9]\+\.\)\{3\}[0-9]\+\)\|[a-fA-F0-9:]\+\)' | awk '{ sub(/inet6? (addr:)? ?/, \"\"); print }'"
+    ####### Generic Colorizer ##################
+    # For diff, etc.
+    source "`brew --prefix`/etc/grc.bashrc"
 
     ####### RevCaster Stuff ####################
     export SLIMERJSLAUNCHER=/Applications/Firefox.app/Contents/MacOS/firefox
@@ -84,6 +87,7 @@ alias pull='git pull -s recursive -X theirs'
 alias ip="dig +short myip.opendns.com @resolver1.opendns.com"
 alias l="ls"
 alias sl="ls"
+alias cd..='cd ..'
 alias scrapers3="cd $HOME && rm -fr $HOME/deploy-old > /dev/null && mv $HOME/deploy $HOME/deploy-old > /dev/null && mkdir $HOME/deploy && cd $HOME/deploy && aws --profile Rev2 s3 cp s3://revcaster.develop.deployment-artifacts/revcaster-php-shopper/deploy.zip $HOME/deploy/deploy.zip --region us-west-2 && unzip $HOME/deploy/deploy.zip"
 
 alias deploy="cd /home && rm -fr /home/deploy-old > /dev/null && mv /home/deploy /home/deploy-old > /dev/null && mkdir /home/deploy && cd /home/deploy && aws --profile Rev2 s3 cp s3://revcaster.develop.deployment-artifacts/revcaster-php-shopper/deploy.zip /home/deploy/deploy.zip --region us-west-2 && unzip /home/deploy/deploy.zip"
@@ -109,7 +113,6 @@ fi
 ############ PYTHON STUFF ##################
 # uncomment below if using homebrew python
 # export PYTHONPATH="/usr/local/lib/python2.7/site-packages:$PYTHONPATH"
-
 # For installation of anaconda I used:
 # http://www.uni-bonn.de/~hmg308/teaching/prog_econ/2013/installation_guide/index.html
 ############ Anaconda #######################
@@ -280,7 +283,6 @@ function git-unpushed {
     fi
 }
 
-#PS1=$(whoami)
 PS1=''
 
 if [[ $- == *i* ]]; then
@@ -302,10 +304,10 @@ if [[ $- == *i* ]]; then
               then echo "'$BROWN'"$(__git_ps1 "<%s:$(git-unpushed)>")
               # the state is clean, changes are commited
         else echo "'$GREEN'"$(__git_ps1 "<%s:$(git-unpushed)>")
-        fi)'$LIGHT_GRAY" \w\[\342\232\241\e[m\] "
+        fi)'$LIGHT_GRAY" \w\342\232\241 "
     export PS1
 fi
-        # fi)'$LIGHT_GRAY" \w  ["'$timer_show'" s] \342\232\241 "
+
 ######## For AWS and Oanda #################
 test -f $HOME/.credentials && source $HOME/.credentials
 
@@ -322,7 +324,15 @@ shopt -s checkwinsize
 
 ####### less config ##########################
 # make less more friendly for non-text input files, see lesspipe(1)
-[ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
+# [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
+
+# Enable syntax-highlighting in less.
+# brew install source-highlight
+# First, add these two lines to ~/.bashrc
+export LESSOPEN="| /usr/local/bin/src-hilite-lesspipe.sh %s"
+export LESS=" -R "
+alias less='less -m -g -i --underline-special --SILENT'
+alias more='less'
 
 ###### Xterm title ###########################
 # If this is an xterm set the title to user@host:dir
@@ -342,7 +352,6 @@ export PATH="${HOME}/bin:${PATH}"
 ####### For Revcaster ######################
 cd $PROJECT_DIR
 
-
 # added by Anaconda3 2.5.0 installer
 # export PATH="//anaconda/bin:$PATH"
 
@@ -350,3 +359,4 @@ cd $PROJECT_DIR
 # export PATH="/Users/jonathan/anaconda/bin:$PATH"
 
 export KUBERNETES_PROVIDER='aws'
+
