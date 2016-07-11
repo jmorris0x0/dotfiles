@@ -32,6 +32,10 @@ Plugin 'VundleVim/Vundle.vim'
 " Avoid a name conflict with L9
 "Plugin 'user/L9', {'name': 'newL9'}
 
+" Docker highlighting
+Plugin 'docker/docker' , {'rtp': '/contrib/syntax/vim/'}
+
+
 " clojure
 Plugin 'tpope/vim-fireplace'
 "Plugin 'tpope/vim-classpath'

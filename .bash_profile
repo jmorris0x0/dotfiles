@@ -1,34 +1,6 @@
 ######### Source ###########################
 # Load .bashrc if it exists
 test -f ~/.bashrc && source ~/.bashrc
-######### project switching functions ######
-function legacy {
-    export PROJECT_DIR="/home/scraper"
-    cd $PROJECT_DIR
-    if grep -Fxq "legacy" $HOME/.current-project
-    then
-        echo "Already on project: legacy"
-    else
-        echo "Switching project to: legacy"
-        mv $HOME/.aws_bak $HOME/.aws
-        rm $HOME/.current-project
-        echo "legacy" > $HOME/.current-project
-    fi
-}
-
-function rev2 {
-    export PROJECT_DIR="$HOME/code/revcaster-shopper"
-    cd $PROJECT_DIR
-    if grep -Fxq "rev2" $HOME/.current-project 
-    then
-        echo "Already on project: rev2"
-    else
-        echo "Switching to project: rev2"
-        mv $HOME/.aws $HOME/.aws_bak
-        rm $HOME/.current-project
-        echo "rev2" > $HOME/.current-project
-    fi
-}
 
 ######### Load system specific stuff #######
 OS="$(uname -s)"
@@ -52,8 +24,9 @@ if test "$OS" = "Darwin"; then
     alias show="defaults write com.apple.finder AppleShowAllFiles -bool true && killall Finder"
     alias hide="defaults write com.apple.finder AppleShowAllFiles -bool false && killall Finder"    
 
-    alias legacy="legacy"
-    alias rev2="rev2"    
+    alias connect="lein repl :connect 192.168.99.100:7888"
+
+    alias project=". project"
     # alias localip="ipconfig getifaddr en0"
     # alias ips="ifconfig -a | grep -o 'inet6\? \(addr:\)\?\s\?\(\(\([0-9]\+\.\)\{3\}[0-9]\+\)\|[a-fA-F0-9:]\+\)' | awk '{ sub(/inet6? (addr:)? ?/, \"\"); print }'"
     ####### Generic Colorizer ##################
@@ -165,9 +138,9 @@ elif [ -x "$(command -v brew)" ]; then
 fi
 
 ####### PerlBrew ###########################
-if [ -d "${HOME}/perl5" ]; then
-    source ~/perl5/perlbrew/etc/bashrc
-fi
+#if [ -d "${HOME}/perl5" ]; then
+#    source ~/perl5/perlbrew/etc/bashrc
+#fi
 ####### For Haskell #########################
 # export PATH="/Users/jonathan/.local/bin:$PATH"
 
@@ -308,7 +281,7 @@ if [[ $- == *i* ]]; then
     export PS1
 fi
 
-######## For AWS and Oanda #################
+######## For IPDealer and Oanda #################
 test -f $HOME/.credentials && source $HOME/.credentials
 
 ###### shopt stuff #########################
@@ -344,13 +317,13 @@ xterm*|rxvt*)
     ;;
 esac
 ###### THIS SHOULD BE LAST   #################
+
+. $HOME/.aws/source-me.sh
+
 #
 # Stuff in my bin folder is always first
 #
 export PATH="${HOME}/bin:${PATH}"
-
-####### For Revcaster ######################
-cd $PROJECT_DIR
 
 # added by Anaconda3 2.5.0 installer
 # export PATH="//anaconda/bin:$PATH"
