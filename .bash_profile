@@ -24,7 +24,7 @@ if test "$OS" = "Darwin"; then
     alias show="defaults write com.apple.finder AppleShowAllFiles -bool true && killall Finder"
     alias hide="defaults write com.apple.finder AppleShowAllFiles -bool false && killall Finder"    
 
-    alias connect="lein repl :connect 192.168.99.100:7888"
+    alias connect="lein repl :connect localhost:7888"
 
     alias project=". project"
     # alias localip="ipconfig getifaddr en0"
@@ -38,9 +38,10 @@ if test "$OS" = "Darwin"; then
 
    ###### Connect to docker instance ############
    # http://stackoverflow.com/questions/32744780/install-docker-toolbox-on-a-mac-via-command-line
-    if [ -x "$(command -v docker-machine)" ]; then
-        eval "$(docker-machine env defaultBox)"
-    fi
+#    if [ -x "$(command -v docker-machine)" ]; then
+#        eval "$(docker-machine env defaultBox)"
+#    fi
+   export DOCKER_HOST=unix:///var/run/docker.sock
 
 elif test "$OS" = "Linux"; then
     :
@@ -89,15 +90,18 @@ fi
 # For installation of anaconda I used:
 # http://www.uni-bonn.de/~hmg308/teaching/prog_econ/2013/installation_guide/index.html
 ############ Anaconda #######################
+# Set default python env here.
+export CONDA_DEFAULT_ENV="py34"
+
 if [ -d "${HOME}/anaconda" ]; then
     # export PATH="${HOME}/anaconda/bin:$PATH"
     # Use for python 3.5:
-    export PATH="${HOME}/anaconda/envs/py34/bin:${HOME}/anaconda/bin:${PATH}"
+    export PATH="${HOME}/anaconda/envs/${CONDA_DEFAULT_ENV}/bin:${HOME}/anaconda/bin:${PATH}"
     # To create and environment:
     # conda update conda
     # conda create -n py35 python=3.5 anaconda
     # To activate this environment, use:
-    source activate py34 &>/dev/null
+    source activate $CONDA_DEFAULT_ENV &>/dev/null
     #
     # To deactivate this environment, use:
     # $ source deactivate
@@ -217,7 +221,7 @@ _bash_history_sync() {
   builtin history -r
 }
 
-# Create history loggin folder if does not exist
+# Create history logging folder if does not exist
 mkdir -p $HOME/.logs
 
 history_log() {
@@ -225,7 +229,7 @@ history_log() {
     then echo "$(date "+%Y-%m-%d.%H:%M:%S") $(pwd) $(history 1)" >> ~/.logs/bash-history-$(date "+%Y-%m-%d").log;
     fi
 }
-# MIght want to try this as well:
+# Might want to try this as well:
 # http://www.pointsoftware.ch/howto-bash-audit-command-logger/
 # https://debian-administration.org/article/543/Bash_eternal_history
 
@@ -316,13 +320,18 @@ xterm*|rxvt*)
 *)
     ;;
 esac
-###### THIS SHOULD BE LAST   #################
 
+####### Ruby #################################
+source /usr/local/opt/chruby/share/chruby/chruby.sh
+source /usr/local/opt/chruby/share/chruby/auto.sh
+chruby ruby-2.2.2
+
+###### THIS STUFF SHOULD BE LAST   ############
+
+# Switch your environment for AWS:
 . $HOME/.aws/source-me.sh
 
-#
 # Stuff in my bin folder is always first
-#
 export PATH="${HOME}/bin:${PATH}"
 
 # added by Anaconda3 2.5.0 installer
@@ -332,4 +341,3 @@ export PATH="${HOME}/bin:${PATH}"
 # export PATH="/Users/jonathan/anaconda/bin:$PATH"
 
 export KUBERNETES_PROVIDER='aws'
-

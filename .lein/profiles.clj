@@ -12,7 +12,8 @@
                       ; Code-smell utility
                       ; https://github.com/dakrone/lein-bikeshed
                       ; $ lein bikeshed
-                      [lein-kibit "0.1.2"]
+                      [lein-kibit "0.1.2"
+]
                       ; Idiomatic Code Analyzer
                       ; https://github.com/jonase/kibit
                       ; $ lein kibit path/to/src
@@ -32,7 +33,8 @@
                       ; $ lein ancient upgrade :interactive
                       ; $ lein ancient upgrade :exclude crypto
         ;;              [io.aviso/pretty "0.1.26"]
-                       [lein-cljfmt "0.5.3"]        
+                       [lein-cljfmt "0.5.3"] 
+                       [com.jakemccrary/lein-test-refresh "0.16.0"]      
         ]
                       ; Cleans up stacktraces
                       ; https://github.com/AvisoNovate/pretty/blob/master/docs/index.rst
@@ -57,7 +59,8 @@
                       ; Namespace browser:
                       ; (use 'clj-ns-browser.sdoc)
                       ; (sdoc) ; This actually loads it.
-                      [im.chit/vinyasa "0.4.7"]
+                      [im.chit/vinyasa "0.4.7"
+                        :exclusions  [org.clojure/clojure]]
                       ; Injects code when changing namespaces.
                       [alembic "0.3.2"]
      ;;                 [lein-light-nrepl "0.3.2"]
@@ -75,7 +78,7 @@
                        ; :init (boot.core/load-data-readers!)
    ;;                    :nrepl-middleware [lighttable.nrepl.handler/lighttable-ops]
                        }
-
+        :test-refresh  {:growl true}
         :injections
         ; Load these automatically into whatever namespace you are using:
         [(require 'spyscope.core
