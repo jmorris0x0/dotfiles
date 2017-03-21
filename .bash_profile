@@ -5,7 +5,8 @@ test -f ~/.bashrc && source ~/.bashrc
 ######### Load system specific stuff #######
 OS="$(uname -s)"
 if test "$OS" = "Darwin"; then
-
+    ######## For broken xvfb ###################
+    export EVENT_NOKQUEUE=1
     ######### Architecture Flags ###############
     export ARCHFLAGS="-arch x86_64"
 
@@ -16,7 +17,7 @@ if test "$OS" = "Darwin"; then
     alias top='top -s3 -o cpu -R -F'
     alias neva='ssh nevawood@Neva.local'
     alias data='ssh jonathan@dataserve.local'
-    alias instance='ssh -i "cascadekey2.pem" root@ec2-54-177-126-187.us-west-1.compute.amazonaws.com'
+    alias instance='cd ~/.ssh && ssh -i "cascadekey2.pem" root@ec2-54-177-17-115.us-west-1.compute.amazonaws.com'
     #alias xvfb-run='Xvfb :1337 & export DISPLAY=:1337 &'
     alias xvfb-run='Xvfb &'
     #alias matlab='/Applications/MATLAB_R2012b.app/bin/matlab -nojvm, -nodesktop, -nosplash'
@@ -27,14 +28,14 @@ if test "$OS" = "Darwin"; then
     alias connect="lein repl :connect localhost:7888"
 
     alias project=". project"
-    # alias localip="ipconfig getifaddr en0"
-    # alias ips="ifconfig -a | grep -o 'inet6\? \(addr:\)\?\s\?\(\(\([0-9]\+\.\)\{3\}[0-9]\+\)\|[a-fA-F0-9:]\+\)' | awk '{ sub(/inet6? (addr:)? ?/, \"\"); print }'"
+    alias localip="ipconfig getifaddr en0"
+    alias ips="ifconfig -a | grep -o 'inet6\? \(addr:\)\?\s\?\(\(\([0-9]\+\.\)\{3\}[0-9]\+\)\|[a-fA-F0-9:]\+\)' | awk '{ sub(/inet6? (addr:)? ?/, \"\"); print }'"
     ####### Generic Colorizer ##################
     # For diff, etc.
     source "`brew --prefix`/etc/grc.bashrc"
 
     ####### RevCaster Stuff ####################
-    export SLIMERJSLAUNCHER=/Applications/Firefox.app/Contents/MacOS/firefox
+    export SLIMERJSLAUNCHER=/Applications/Firefox46.app/Contents/MacOS/firefox
 
    ###### Connect to docker instance ############
    # http://stackoverflow.com/questions/32744780/install-docker-toolbox-on-a-mac-via-command-line
@@ -42,6 +43,9 @@ if test "$OS" = "Darwin"; then
 #        eval "$(docker-machine env defaultBox)"
 #    fi
    export DOCKER_HOST=unix:///var/run/docker.sock
+
+   # This is so that docker instance can reach localhost postgresql. Not sure why I addeed thing above.
+   export DOCKERHOST="$(ifconfig en0 inet | grep "inet " | awk -F'[: ]+' '{ print $2 }')"
 
 elif test "$OS" = "Linux"; then
     :
@@ -91,12 +95,12 @@ fi
 # http://www.uni-bonn.de/~hmg308/teaching/prog_econ/2013/installation_guide/index.html
 ############ Anaconda #######################
 # Set default python env here.
-export CONDA_DEFAULT_ENV="py34"
+export CONDA_DEFAULT_ENV="py35"
 
-if [ -d "${HOME}/anaconda" ]; then
+if [ -d "${HOME}/anaconda3" ]; then
     # export PATH="${HOME}/anaconda/bin:$PATH"
     # Use for python 3.5:
-    export PATH="${HOME}/anaconda/envs/${CONDA_DEFAULT_ENV}/bin:${HOME}/anaconda/bin:${PATH}"
+    export PATH="${HOME}/anaconda3/envs/${CONDA_DEFAULT_ENV}/bin:${HOME}/anaconda3/bin:${PATH}"
     # To create and environment:
     # conda update conda
     # conda create -n py35 python=3.5 anaconda
@@ -324,12 +328,14 @@ esac
 ####### Ruby #################################
 source /usr/local/opt/chruby/share/chruby/chruby.sh
 source /usr/local/opt/chruby/share/chruby/auto.sh
-chruby ruby-2.2.2
+chruby ruby-2.3.1
 
 ###### THIS STUFF SHOULD BE LAST   ############
 
 # Switch your environment for AWS:
 . $HOME/.aws/source-me.sh
+
+export PATH="${HOME}/code/Scraper-Code:${PATH}"
 
 # Stuff in my bin folder is always first
 export PATH="${HOME}/bin:${PATH}"
@@ -341,3 +347,11 @@ export PATH="${HOME}/bin:${PATH}"
 # export PATH="/Users/jonathan/anaconda/bin:$PATH"
 
 export KUBERNETES_PROVIDER='aws'
+
+test -e "${HOME}/.iterm2_shell_integration.bash" && source "${HOME}/.iterm2_shell_integration.bash"
+
+# added by Anaconda3 4.2.0 installer
+export PATH="/Users/jonathan/anaconda3/bin:$PATH"
+
+cd $HOME/code
+

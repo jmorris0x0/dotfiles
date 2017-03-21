@@ -37,12 +37,12 @@ Plugin 'docker/docker' , {'rtp': '/contrib/syntax/vim/'}
 
 
 " clojure
-Plugin 'tpope/vim-fireplace'
+"Plugin 'tpope/vim-fireplace'
 "Plugin 'tpope/vim-classpath'
 Plugin 'guns/vim-clojure-static'
 Plugin 'vim-scripts/paredit.vim'
 Plugin 'kien/rainbow_parentheses.vim'
-Plugin 'tpope/vim-leiningen'
+"Plugin 'tpope/vim-leiningen'
 
 " git
 " Plugin 'gregsexton/gitv'
