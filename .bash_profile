@@ -47,6 +47,9 @@ if test "$OS" = "Darwin"; then
    # This is so that docker instance can reach localhost postgresql. Not sure why I addeed thing above.
    export DOCKERHOST="$(ifconfig en0 inet | grep "inet " | awk -F'[: ]+' '{ print $2 }')"
 
+   function dockbash() { docker exec -it $@ bash; }
+   function dockbashroot() { docker exec -u root -it $@ bash; }
+
 elif test "$OS" = "Linux"; then
     :
 
@@ -95,7 +98,7 @@ fi
 # http://www.uni-bonn.de/~hmg308/teaching/prog_econ/2013/installation_guide/index.html
 ############ Anaconda #######################
 # Set default python env here.
-export CONDA_DEFAULT_ENV="py35"
+export CONDA_DEFAULT_ENV="py36"
 
 if [ -d "${HOME}/anaconda3" ]; then
     # export PATH="${HOME}/anaconda/bin:$PATH"
@@ -355,3 +358,7 @@ export PATH="/Users/jonathan/anaconda3/bin:$PATH"
 
 cd $HOME/code
 
+if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
+
+# added by Anaconda3 5.1.0 installer
+export PATH="/Users/jonathan/anaconda3/bin:$PATH"
