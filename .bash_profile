@@ -284,7 +284,7 @@ cd $HOME/code
 
 eval "$(direnv hook bash)"
 
-export GITHUB_TOKEN=4ffe888018c8164d7c08838aad5b28d85561c7af
+export GITHUB_TOKEN=''
                                         
 function parkside() {
     if [[ $@ == "update" ]]; then
