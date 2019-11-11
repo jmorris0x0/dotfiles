@@ -195,9 +195,15 @@ function whichaws {
 function aws_prompt {
     if [ -n "$AWS_ACCESS_KEY_ID" ] && [ -x "$(command -v aws)" ]; then
         if [ -z "$LAST_AWS_ACCESS_KEY_ID" ] || \
+            [ "$LAST_AWS_SECRET_ACCESS_KEY" != "$AWS_SECRET_ACCESS_KEY" ] || \
             [ "$LAST_AWS_ACCESS_KEY_ID" != "$AWS_ACCESS_KEY_ID" ]; then
             export LAST_AWS_ACCESS_KEY_ID="$AWS_ACCESS_KEY_ID"
-            export CURRENT_AWS_ACCOUNT_ALIAS=$(aws iam list-account-aliases --query AccountAliases[0] --output text)
+            export LAST_AWS_SECRET_ACCESS_KEY="$AWS_SECRET_ACCESS_KEY"
+            current=$(aws iam list-account-aliases --query AccountAliases[0] --output text)
+            if [ "$current" == "None" ]; then
+                current=$(aws sts get-caller-identity | jq -r '.Account')
+            fi
+            export CURRENT_AWS_ACCOUNT_ALIAS=$current
         fi
          echo -en "\033[0;35m<$CURRENT_AWS_ACCOUNT_ALIAS>"
     fi
