@@ -3,7 +3,11 @@
 test -f ~/.bashrc && source ~/.bashrc
 
 ######## Load tmux #########################
-if command -v tmux &> /dev/null && [ -n "$PS1" ] && [[ ! "$TERM" =~ screen ]] && [[ ! "$TERM" =~ tmux ]] && [ -z "$TMUX" ]; then
+if [ -x "$(command -v tmux)" ] && \
+   [ -n "$PS1" ] && \
+   [[ ! "$TERM" =~ screen ]] && \
+   [[ ! "$TERM" =~ tmux ]] && \
+   [ -z "$TMUX" ]; then
   exec tmux
 fi
 
