@@ -2,6 +2,11 @@
 # Load .bashrc if it exists
 test -f ~/.bashrc && source ~/.bashrc
 
+######## Load tmux #########################
+if command -v tmux &> /dev/null && [ -n "$PS1" ] && [[ ! "$TERM" =~ screen ]] && [[ ! "$TERM" =~ tmux ]] && [ -z "$TMUX" ]; then
+  exec tmux
+fi
+
 ######### Load system specific stuff #######
 OS="$(uname -s)"
 if test "$OS" = "Darwin"; then
@@ -15,40 +20,22 @@ if test "$OS" = "Darwin"; then
 
     ############## ALIASES:######################
     alias top='top -s3 -o cpu -R -F'
-    alias neva='ssh nevawood@Neva.local'
-    alias data='ssh jonathan@dataserve.local'
-    alias instance='cd ~/.ssh && ssh -i "cascadekey2.pem" root@ec2-54-177-17-115.us-west-1.compute.amazonaws.com'
-    #alias xvfb-run='Xvfb :1337 & export DISPLAY=:1337 &'
-    alias xvfb-run='Xvfb &'
-    #alias matlab='/Applications/MATLAB_R2012b.app/bin/matlab -nojvm, -nodesktop, -nosplash'
-    # Show/hide hidden files in Finder
-    alias show="defaults write com.apple.finder AppleShowAllFiles -bool true && killall Finder"
-    alias hide="defaults write com.apple.finder AppleShowAllFiles -bool false && killall Finder"    
 
     alias connect="lein repl :connect localhost:7888"
 
     alias project=". project"
     alias localip="ipconfig getifaddr en0"
-    alias ips="ifconfig -a | grep -o 'inet6\? \(addr:\)\?\s\?\(\(\([0-9]\+\.\)\{3\}[0-9]\+\)\|[a-fA-F0-9:]\+\)' | awk '{ sub(/inet6? (addr:)? ?/, \"\"); print }'"
     ####### Generic Colorizer ##################
     # For diff, etc.
     source "`brew --prefix`/etc/grc.bashrc"
 
-    ####### RevCaster Stuff ####################
-    export SLIMERJSLAUNCHER=/Applications/Firefox46.app/Contents/MacOS/firefox
+    export DOCKER_HOST=unix:///var/run/docker.sock
 
-   ###### Connect to docker instance ############
-   # http://stackoverflow.com/questions/32744780/install-docker-toolbox-on-a-mac-via-command-line
-#    if [ -x "$(command -v docker-machine)" ]; then
-#        eval "$(docker-machine env defaultBox)"
-#    fi
-   export DOCKER_HOST=unix:///var/run/docker.sock
+    # This is so that docker instance can reach localhost postgresql. Not sure why I addeed thing above.
+    export DOCKERHOST="$(ifconfig en0 inet | grep "inet " | awk -F'[: ]+' '{ print $2 }')"
 
-   # This is so that docker instance can reach localhost postgresql. Not sure why I addeed thing above.
-   export DOCKERHOST="$(ifconfig en0 inet | grep "inet " | awk -F'[: ]+' '{ print $2 }')"
-
-   function dockbash() { docker exec -it $@ bash; }
-   function dockbashroot() { docker exec -u root -it $@ bash; }
+    function dockbash() { docker exec -it $@ bash; }
+    function dockbashroot() { docker exec -u root -it $@ bash; }
 
 elif test "$OS" = "Linux"; then
     :
@@ -62,16 +49,12 @@ alias badge="tput bel"
 alias hidden='ls -d .*'
 alias ls='ls -FA' 
 alias exit='jobs; exit'
-alias lsgit='git ls-tree master --name-only '
-alias pull='git pull -s recursive -X theirs'
-# IP addresses
 alias ip="dig +short myip.opendns.com @resolver1.opendns.com"
 alias l="ls"
 alias sl="ls"
 alias cd..='cd ..'
-alias scrapers3="cd $HOME && rm -fr $HOME/deploy-old > /dev/null && mv $HOME/deploy $HOME/deploy-old > /dev/null && mkdir $HOME/deploy && cd $HOME/deploy && aws --profile Rev2 s3 cp s3://revcaster.develop.deployment-artifacts/revcaster-php-shopper/deploy.zip $HOME/deploy/deploy.zip --region us-west-2 && unzip $HOME/deploy/deploy.zip"
-
-alias deploy="cd /home && rm -fr /home/deploy-old > /dev/null && mv /home/deploy /home/deploy-old > /dev/null && mkdir /home/deploy && cd /home/deploy && aws --profile Rev2 s3 cp s3://revcaster.develop.deployment-artifacts/revcaster-php-shopper/deploy.zip /home/deploy/deploy.zip --region us-west-2 && unzip /home/deploy/deploy.zip"
+alias vim='nvim'
+alias tf='terraform'
 
 ###### Always use color output for `ls` #########
 if ls --color > /dev/null 2>&1; then # GNU `ls`
@@ -84,20 +67,7 @@ alias ls="command ls ${colorflag}"
 
 export LS_COLORS='no=00:fi=00:di=01;34:ln=01;36:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arj=01;31:*.taz=01;31:*.lzh=01;31:*.zip=01;31:*.z=01;31:*.Z=01;31:*.gz=01;31:*.bz2=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.jpg=01;35:*.jpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.avi=01;35:*.fli=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.ogg=01;35:*.mp3=01;35:*.wav=01;35:'
 
-########### GOLANG ##############################
-if [ -x "$(command -v go)" ]; then
-    export GOPATH=$HOME/code/go
-    export PATH=$PATH:$GOPATH/bin
-    export PATH=$PATH:/usr/local/opt/go/libexec/bin
-fi
-
 ############ PYTHON STUFF ##################
-# uncomment below if using homebrew python
-# export PYTHONPATH="/usr/local/lib/python2.7/site-packages:$PYTHONPATH"
-# For installation of anaconda I used:
-# http://www.uni-bonn.de/~hmg308/teaching/prog_econ/2013/installation_guide/index.html
-############ Anaconda #######################
-# Set default python env here.
 export CONDA_DEFAULT_ENV="py36"
 
 if [ -d "${HOME}/anaconda3" ]; then
@@ -125,35 +95,9 @@ fi
 
 if [[ $- == *i* ]]
   then
-    python --version
+    :
+    # python --version
 fi
-
-### For the Heroku Toolbelt ###########
-if [ -d "/usr/local/heroku" ]; then
-    export PATH="/usr/local/heroku/bin:$PATH"
-    export PATH=$PATH:/usr/x11/bin
-fi
-
-### Added for phpbrew ######################
-if [ -d "${HOME}/.phpbrew" ]; then
-    source $HOME/.phpbrew/bashrc
-    export PHPBREW_SET_PROMPT=0
-    PHP_VERSION=$(phpbrew_current_php_version)
-    if [[ $- == *i* ]]; then
-        echo $PHP_VERSION
-    fi
-    #phpbrew lookup-prefix homebrew
-elif [ -x "$(command -v brew)" ]; then 
-    # export PATH="$(brew --prefix homebrew/php/php56)/bin:$PATH"
-    php --version
-fi
-
-####### PerlBrew ###########################
-#if [ -d "${HOME}/perl5" ]; then
-#    source ~/perl5/perlbrew/etc/bashrc
-#fi
-####### For Haskell #########################
-# export PATH="/Users/jonathan/.local/bin:$PATH"
 
 ######## Fancy Terminal Colors ##############
 MAGENTA="\[\033[0;35m\]"
@@ -181,28 +125,6 @@ export LSCOLORS=gxfxbEaEBxxEhEhBaDaCaD
 ###### Environmental variables #############
 export EDITOR=vim
 
-###### For timing Bash commands ############
-# BCT_AT_PROMPT=1
-# function BCTPreCommand() {
-#   if [ -z "$BCT_AT_PROMPT" ]; then
-#     return
-#   fi
-#   unset BCT_AT_PROMPT
-#   BCT_COMMAND_START_TIME=$(eval $BCTTime)
-# }
-# trap 'BCTPreCommand' DEBUG
-
-
-
-# timer_stop() {
-#   timer_show= $(($SECONDS - $timer))
-#   unset timer
-#   echo "timer_stop"
-#   # echo $timer_show
-# }
-
-# trap '$(timer_start)' DEBUG
-
 ####### History stuff #######################
 # don't put duplicate lines in the history. See bash(1) for more options
 # ... or force ignoredups and ignorespace
@@ -228,6 +150,7 @@ _bash_history_sync() {
   builtin history -r
 }
 
+######### For comprehensive shell logs #########
 # Create history logging folder if does not exist
 mkdir -p $HOME/.logs
 
@@ -236,23 +159,49 @@ history_log() {
     then echo "$(date "+%Y-%m-%d.%H:%M:%S") $(pwd) $(history 1)" >> ~/.logs/bash-history-$(date "+%Y-%m-%d").log;
     fi
 }
+
+function searchlogs() { grep -H  "$@" ~/.logs/*.log; }
+
 # Might want to try this as well:
 # http://www.pointsoftware.ch/howto-bash-audit-command-logger/
 # https://debian-administration.org/article/543/Bash_eternal_history
 
 # Write a copy of time-stamped history to a daily log file.
 PROMPT_COMMAND=history_log
-# PROMPT_COMMAND='timer_stop'
-#timer_stop
+
+######## For AWS ##########################
+function whichaws {
+    caller=$(aws sts get-caller-identity)
+    alias=$(aws iam list-account-aliases --query AccountAliases[0] --output text)
+    region=$(aws configure get region)
+
+    account=$(echo $caller | jq -r '.Account')
+    echo "Account: $account"
+    echo "Alias:   $alias"
+
+    UserId=$(echo $caller | jq -r '.UserId')
+    echo "UserId:  $UserId"
+
+    UserARN=$(echo $caller | jq -r '.Arn')
+    echo "UserArn: $UserARN"
+
+    echo "Region:  $region"
+}
+
+function aws_prompt {
+    if [ -n "$AWS_ACCESS_KEY_ID" ] && [ -x "$(command -v aws)" ]; then
+        if [ -z "$LAST_AWS_ACCESS_KEY_ID" ] || \
+            [ "$LAST_AWS_ACCESS_KEY_ID" != "$AWS_ACCESS_KEY_ID" ]; then
+            export LAST_AWS_ACCESS_KEY_ID="$AWS_ACCESS_KEY_ID"
+            export CURRENT_AWS_ACCOUNT_ALIAS=$(aws iam list-account-aliases --query AccountAliases[0] --output text)
+        fi
+         echo -en "\033[0;35m<$CURRENT_AWS_ACCOUNT_ALIAS>"
+    fi
+}
+
+export "PROMPT_COMMAND=$PROMPT_COMMAND;aws_prompt"
 
 ######### Added for Git ####################
-alias gitupdate='echo "fetch...rebase...push" && git fetch upstream && git rebase upstream/master && git push -f origin master'
-# export PS1='[\w$(__git_ps1)]\$ '
-#parse_git_branch() {
-# git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
-# }
-#export PS1="($CONDA_DEFAULT_ENV)\w\[\033[32m\]\$(parse_git_branch)\[\033[00m\]$ "
-
 function git-branch-name {
     echo $(git rev-parse --abbrev-ref HEAD 2>/dev/null)
 }
@@ -273,12 +222,6 @@ if [[ $- == *i* ]]; then
     source ~/.git-prompt.sh
     source ~/.git-completion.bash
     GIT_PS1_SHOWDIRTYSTATE=true
-    if [ -d "${HOME}/anaconda" ]; then
-        PS1=$PS1$LIGHT_BLUE"<$CONDA_DEFAULT_ENV> "
-    else 
-        PS1=$PS1''
-    fi
-
     PS1=$PS1'$(
         if [[ $(__git_ps1) =~ \*\)$ ]]
               # a file has been modified but not added
@@ -291,9 +234,6 @@ if [[ $- == *i* ]]; then
         fi)'$LIGHT_GRAY" \w\342\232\241 "
     export PS1
 fi
-
-######## For IPDealer and Oanda #################
-test -f $HOME/.credentials && source $HOME/.credentials
 
 ###### shopt stuff #########################
 # append to the history file, don't overwrite it
@@ -308,8 +248,6 @@ shopt -s checkwinsize
 
 ####### less config ##########################
 # make less more friendly for non-text input files, see lesspipe(1)
-# [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
-
 # Enable syntax-highlighting in less.
 # brew install source-highlight
 # First, add these two lines to ~/.bashrc
@@ -328,26 +266,12 @@ xterm*|rxvt*)
     ;;
 esac
 
-####### Ruby #################################
-source /usr/local/opt/chruby/share/chruby/chruby.sh
-source /usr/local/opt/chruby/share/chruby/auto.sh
-chruby ruby-2.3.1
-
 ###### THIS STUFF SHOULD BE LAST   ############
-
 # Switch your environment for AWS:
 . $HOME/.aws/source-me.sh
 
-export PATH="${HOME}/code/Scraper-Code:${PATH}"
-
 # Stuff in my bin folder is always first
 export PATH="${HOME}/bin:${PATH}"
-
-# added by Anaconda3 2.5.0 installer
-# export PATH="//anaconda/bin:$PATH"
-
-# added by Anaconda3 2.5.0 installer
-# export PATH="/Users/jonathan/anaconda/bin:$PATH"
 
 export KUBERNETES_PROVIDER='aws'
 
@@ -358,7 +282,21 @@ export PATH="/Users/jonathan/anaconda3/bin:$PATH"
 
 cd $HOME/code
 
-if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
+eval "$(direnv hook bash)"
 
-# added by Anaconda3 5.1.0 installer
-export PATH="/Users/jonathan/anaconda3/bin:$PATH"
+export GITHUB_TOKEN=4ffe888018c8164d7c08838aad5b28d85561c7af
+                                        
+function parkside() {
+    if [[ $@ == "update" ]]; then
+        command docker pull quay.io/parkside-securities/parkside-cli
+    else
+        command docker run -e "GITHUB_TOKEN=${GITHUB_TOKEN}" quay.io/parkside-securities/parkside-cli:latest "$@"
+    fi
+}
+
+# For gnu internet utilities. They are prepended with 'g' but this will fix that:
+# If these are missing, install with 'brew install coreutils'
+PATH="/usr/local/opt/inetutils/libexec/gnubin:$PATH"
+
+source ~/.iterm2_shell_integration.bash
+
