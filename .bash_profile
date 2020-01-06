@@ -59,6 +59,7 @@ alias sl="ls"
 alias cd..='cd ..'
 alias vim='nvim'
 alias tf='terraform'
+alias k='kubectl'
 
 ###### Always use color output for `ls` #########
 if ls --color > /dev/null 2>&1; then # GNU `ls`
@@ -209,7 +210,7 @@ function aws_prompt {
     fi
 }
 
-export "PROMPT_COMMAND=$PROMPT_COMMAND;aws_prompt"
+# export "PROMPT_COMMAND=$PROMPT_COMMAND;aws_prompt"
 
 ######### Added for Git ####################
 function git-branch-name {
@@ -241,7 +242,7 @@ if [[ $- == *i* ]]; then
               then echo "'$BROWN'"$(__git_ps1 "<%s:$(git-unpushed)>")
               # the state is clean, changes are commited
         else echo "'$GREEN'"$(__git_ps1 "<%s:$(git-unpushed)>")
-        fi)'$LIGHT_GRAY" \w\342\232\241 "
+        fi)'$LIGHT_GRAY"\w\342\232\241 "
     export PS1
 fi
 
