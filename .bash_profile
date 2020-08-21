@@ -8,7 +8,7 @@ if [ -x "$(command -v tmux)" ] && \
    [[ ! "$TERM" =~ screen ]] && \
    [[ ! "$TERM" =~ tmux ]] && \
    [ -z "$TMUX" ]; then
-  exec tmux
+  exec tmux -v
 fi
 
 ######### Load system specific stuff #######
@@ -16,6 +16,8 @@ OS="$(uname -s)"
 if test "$OS" = "Darwin"; then
     ######## For broken xvfb ###################
     export EVENT_NOKQUEUE=1
+    ######## Rasperrry pi dev
+    alias pi='ssh pi@raspberrypi.local'
     ######### Architecture Flags ###############
     export ARCHFLAGS="-arch x86_64"
 
@@ -242,9 +244,11 @@ if [[ $- == *i* ]]; then
               then echo "'$BROWN'"$(__git_ps1 "<%s:$(git-unpushed)>")
               # the state is clean, changes are commited
         else echo "'$GREEN'"$(__git_ps1 "<%s:$(git-unpushed)>")
-        fi)'$LIGHT_GRAY"\w\342\232\241 "
+        fi)'$LIGHT_GRAY"\w "
     export PS1
 fi
+
+#         fi)'$LIGHT_GRAY"\w\342\232\241 "
 
 ###### shopt stuff #########################
 # append to the history file, don't overwrite it
@@ -310,4 +314,7 @@ function parkside() {
 PATH="/usr/local/opt/inetutils/libexec/gnubin:$PATH"
 
 source ~/.iterm2_shell_integration.bash
+
+# For K8s
+source <(kubectl completion bash | sed s/kubectl/k/g)
 
