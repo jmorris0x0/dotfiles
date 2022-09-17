@@ -60,7 +60,7 @@ Plug 'venantius/vim-cljfmt', { 'for': 'clojure' }
 
 "Plug 'clojure-vim/vim-cider'
 
-Plug 'junegunn/vim-easy-align'
+"Plug 'junegunn/vim-easy-align'
 
 Plug 'avakhov/vim-yaml'
 
@@ -77,6 +77,8 @@ Plug 'weirongxu/plantuml-previewer.vim'
 Plug 'tyru/open-browser.vim'
 
 Plug 'aklt/plantuml-syntax'
+
+Plug 'github/copilot.vim'
 
 "Initialize plugin system
 call plug#end()
@@ -154,15 +156,18 @@ set backspace=indent,eol,start
 
 " TABS AND SPACES
 
-set tabstop=4 " The width of a TAB is set to 4.
-              " Still it is a \t. It is just that
-              " Vim will interpret it to be having
-              " a width of 4.
-set softtabstop=0 " Sets the number of columns for a TAB
-set expandtab " Indents will have a width of 4
-set shiftwidth=4 " Indents will have a width of 4
-set smarttab  " make tab insert indents instead of tabs at the start  of linea
+"set tabstop=4 " The width of a TAB is set to 4.
+              "" Still it is a \t. It is just that
+              "" Vim will interpret it to be having
+              "" a width of 4.
+"set softtabstop=0 " Sets the number of columns for a TAB
+"set expandtab " Indents will have a width of 4
+"set shiftwidth=4 " Indents will have a width of 4
+"set smarttab  " make tab insert indents instead of tabs at the start  of line
 
+set expandtab
+set shiftwidth=2
+set softtabstop=2
 
 "autocmd StdinReadPre * let s:std_in=1
 "autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
@@ -290,4 +295,9 @@ set noeol
 let g:terraform_fmt_on_save=1
 let g:terraform_align=1
 
-
+" Highlight all tabs
+function! HiTabs()
+    syntax match TAB /\t/
+    hi TAB ctermbg=blue ctermfg=red
+endfunction
+au BufEnter,BufRead * call HiTabs()

@@ -2,17 +2,17 @@
 # Load .bashrc if it exists
 test -f ~/.bashrc && source ~/.bashrc
 
-######## Load tmux #########################
+####### Load tmux #########################
 if [ -x "$(command -v tmux)" ] && \
    [ -n "$PS1" ] && \
    [[ ! "$TERM" =~ screen ]] && \
    [[ ! "$TERM" =~ tmux ]] && \
    [ -z "$TMUX" ]; then
-  exec tmux -v
+  exec tmux
 fi
 
 ######### Load system specific stuff #######
-OS="$(uname -s)"
+OS="(uname -s)"
 if test "$OS" = "Darwin"; then
     ######## For broken xvfb ###################
     export EVENT_NOKQUEUE=1
@@ -61,6 +61,7 @@ alias sl="ls"
 alias cd..='cd ..'
 alias vim='nvim'
 alias tf='terraform'
+alias tfshortplan='tf plan -no-color | grep "replaced\|destroyed\|created\|forces\|updated" |grep -v "created_at"'
 alias k='kubectl'
 
 ###### Always use color output for `ls` #########
@@ -77,34 +78,34 @@ export LS_COLORS='no=00:fi=00:di=01;34:ln=01;36:pi=40;33:so=01;35:do=01;35:bd=40
 ############ PYTHON STUFF ##################
 export CONDA_DEFAULT_ENV="py36"
 
-if [ -d "${HOME}/anaconda3" ]; then
-    # export PATH="${HOME}/anaconda/bin:$PATH"
-    # Use for python 3.5:
-    export PATH="${HOME}/anaconda3/envs/${CONDA_DEFAULT_ENV}/bin:${HOME}/anaconda3/bin:${PATH}"
-    # To create and environment:
-    # conda update conda
-    # conda create -n py35 python=3.5 anaconda
-    # To activate this environment, use:
-    source activate $CONDA_DEFAULT_ENV &>/dev/null
-    #
-    # To deactivate this environment, use:
-    # $ source deactivate
-
-    # To install stuff:
-    # conda install -n py33 statsmodels
-    # or
-    # pip install coverage
-
-    # conda info
-elif [ -x "$(command -v brew)" ]; then
-    export PYTHONPATH="/usr/local/lib/python2.7/site-packages:$PYTHONPATH"
-fi
-
-if [[ $- == *i* ]]
-  then
-    :
-    # python --version
-fi
+#if [ -d "${HOME}/anaconda3" ]; then
+#    # export PATH="${HOME}/anaconda/bin:$PATH"
+#    # Use for python 3.5:
+#    export PATH="${HOME}/anaconda3/envs/${CONDA_DEFAULT_ENV}/bin:${HOME}/anaconda3/bin:${PATH}"
+#    # To create and environment:
+#    # conda update conda
+#    # conda create -n py35 python=3.5 anaconda
+#    # To activate this environment, use:
+#    source activate $CONDA_DEFAULT_ENV &>/dev/null
+#    #
+#    # To deactivate this environment, use:
+#    # $ source deactivate
+#
+#    # To install stuff:
+#    # conda install -n py33 statsmodels
+#    # or
+#    # pip install coverage
+#
+#    # conda info
+#elif [ -x "$(command -v brew)" ]; then
+#    export PYTHONPATH="/usr/local/lib/python2.7/site-packages:$PYTHONPATH"
+#fi
+#
+#if [[ $- == *i* ]]
+#  then
+#    :
+#    # python --version
+#fi
 
 ######## Fancy Terminal Colors ##############
 MAGENTA="\[\033[0;35m\]"
@@ -167,7 +168,7 @@ history_log() {
     fi
 }
 
-function searchlogs() { grep -H  "$@" ~/.logs/*.log; }
+function logs() { grep -H  "$@" ~/.logs/*.log; }
 
 # Might want to try this as well:
 # http://www.pointsoftware.ch/howto-bash-audit-command-logger/
@@ -212,7 +213,24 @@ function aws_prompt {
     fi
 }
 
+#function get_token {
+    #credetials=$(aws sts assume-role --role-arn=$TF_VAR_config_role_arn --role-session=cli)
+    #AccessKeyId=$(echo $caller | jq -r '.Credentials.AccessKeyId')
+    #SecretAccessKey=$(echo $caller | jq -r '.Credentials.SecretAccessKey')
+    #SessionToken=$(echo $caller | jq -r '.Credentials.SessionToken')
+    #echo "export AWS_SECRET_ACCESS_KEY=
+	#echo "export AWS_ACCESS_KEY_ID=
+    #echo "export AWS_SESSION_TOKEN=
+
+#}
+
 # export "PROMPT_COMMAND=$PROMPT_COMMAND;aws_prompt"
+
+######### Added for k8s ###################
+function prompt_k8s {
+  k8s_current_context=$(kubectl config current-context 2> /dev/null)
+  if [[ $? -eq 0 ]] ; then echo -e "'$BLUE'("$k8s_current_context")"; fi
+}
 
 ######### Added for Git ####################
 function git-branch-name {
@@ -230,6 +248,8 @@ function git-unpushed {
 }
 
 PS1=''
+
+#PS1+='$(prompt_k8s)'
 
 if [[ $- == *i* ]]; then
     source ~/.git-prompt.sh
@@ -293,7 +313,7 @@ export KUBERNETES_PROVIDER='aws'
 test -e "${HOME}/.iterm2_shell_integration.bash" && source "${HOME}/.iterm2_shell_integration.bash"
 
 # added by Anaconda3 4.2.0 installer
-export PATH="/Users/jonathan/anaconda3/bin:$PATH"
+#export PATH="$HOME/anaconda3/bin:$PATH"
 
 cd $HOME/code
 
@@ -318,3 +338,12 @@ source ~/.iterm2_shell_integration.bash
 # For K8s
 source <(kubectl completion bash | sed s/kubectl/k/g)
 
+
+# Add ssh keys to path
+PATH="$PATH:$HOME/.ssh"
+
+HOMEBREW_GITHUB_API_TOKEN=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
+export PATH="/usr/local/sbin:$PATH"
+export PATH="/usr/local/opt/node@16/bin:$PATH"
+
+eval $(minikube docker-env)
