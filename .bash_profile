@@ -71,6 +71,7 @@ if test "$OS" = "Darwin"; then
       [rg]=ripgrep
       [aws]=awscli
       [eksctl]=eksctl
+      [fzf]=fzf
     )
 
     # Check each software and install if missing
@@ -81,6 +82,12 @@ if test "$OS" = "Darwin"; then
         brew install $package >/dev/null 2>&1
       fi
     done
+
+    if ! type __git_complete &> /dev/null; then
+        if command -v brew >/dev/null 2>&1; then
+            brew install bash-completion
+        fi
+    fi
 
 elif test "$OS" = "Linux"; then
     :
@@ -341,8 +348,10 @@ xterm*|rxvt*)
 esac
 
 ###### THIS STUFF SHOULD BE LAST   ############
-# Switch your environment for AWS:
-. $HOME/.aws/source-me.sh
+# Switch your environment for AWS.
+if [ -f "$HOME/.aws/source-me.sh" ]; then
+    . "$HOME/.aws/source-me.sh"
+fi
 
 # Stuff in my bin folder is always first
 export PATH="${HOME}/bin:${PATH}"
@@ -354,6 +363,7 @@ test -e "${HOME}/.iterm2_shell_integration.bash" && source "${HOME}/.iterm2_shel
 # added by Anaconda3 4.2.0 installer
 #export PATH="$HOME/anaconda3/bin:$PATH"
 
+mkdir -p $HOME/code
 cd $HOME/code
 
 # eval "$(direnv hook bash)"
@@ -372,7 +382,9 @@ function parkside() {
 # If these are missing, install with 'brew install coreutils'
 PATH="/usr/local/opt/inetutils/libexec/gnubin:$PATH"
 
-source ~/.iterm2_shell_integration.bash
+if [ -f ~/.iterm2_shell_integration.bash ]; then
+    source ~/.iterm2_shell_integration.bash
+fi
 
 # For K8s
 source <(kubectl completion bash | sed s/kubectl/k/g)
