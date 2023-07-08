@@ -3,17 +3,29 @@
 test -f ~/.bashrc && source ~/.bashrc
 
 ####### Load tmux #########################
-if [ -x "$(command -v tmux)" ] && \
-   [ -n "$PS1" ] && \
-   [[ ! "$TERM" =~ screen ]] && \
-   [[ ! "$TERM" =~ tmux ]] && \
-   [ -z "$TMUX" ]; then
-  exec tmux
-fi
+# if [ -x "$(command -v tmux)" ] && \
+#    [ -n "$PS1" ] && \
+#    [[ ! "$TERM" =~ screen ]] && \
+#    [[ ! "$TERM" =~ tmux ]] && \
+#    [ -z "$TMUX" ]; then
+#   exec tmux
+# fi
 
 ######### Load system specific stuff #######
-OS="(uname -s)"
+OS="$(uname -s)"
 if test "$OS" = "Darwin"; then
+    ######## Finder defaults ##################
+    # Speed up that trackpad:
+    defaults write -g com.apple.trackpad.scaling 5
+    # Don't save files to the cloud:
+    defaults write NSGlobalDomain "NSDocumentSaveNewDocumentsToCloud" -bool "false"
+    # Show path
+    defaults write com.apple.finder "_FXShowPosixPathInTitle" -bool "true"
+    # Show hidden files:
+    defaults write com.apple.finder "AppleShowAllFiles" -bool "true"
+    # Show filename extensions:
+    defaults write NSGlobalDomain "AppleShowAllExtensions" -bool "true"
+
     ######## Rasperrry pi dev
     alias pi='ssh pi@raspberrypi.local'
     ######### Architecture Flags ###############
@@ -25,13 +37,10 @@ if test "$OS" = "Darwin"; then
     ############## ALIASES:######################
     alias top='top -s3 -o cpu -R -F'
 
-    alias connect="lein repl :connect localhost:7888"
+    #alias connect="lein repl :connect localhost:7888"
 
     alias project=". project"
     alias localip="ipconfig getifaddr en0"
-    ####### Generic Colorizer ##################
-    # For diff, etc.
-    source "`brew --prefix`/etc/grc.bashrc"
 
     export DOCKER_HOST=unix:///var/run/docker.sock
 
@@ -42,8 +51,8 @@ if test "$OS" = "Darwin"; then
     function dockbashroot() { docker exec -u root -it $@ bash; }
 
     # Check bash version and update if less than 4.0
-    if [ "${BASH_VERSINFO}" -lt 4 ]; then
-        echo "Bash version is less than 4.0. Updating..."
+    if [ "${BASH_VERSINFO}" -lt 5 ]; then
+        echo "Bash version is less than 5.0. Updating..."
         brew install bash >/dev/null 2>&1
         echo "Please change the default shell to the new Bash and re-run this script."
         echo "You can do this by adding '/usr/local/bin/bash' to /etc/shells and then running 'chsh -s /usr/local/bin/bash'"
@@ -53,7 +62,7 @@ if test "$OS" = "Darwin"; then
     declare -A software_list=(
       [git]=git
       [bash]=bash
-      [coreutils]=coreutils
+      #[coreutils]=coreutils
       [tree]=tree
       [tfenv]=tfenv
       [tflint]=tflint
@@ -79,15 +88,24 @@ if test "$OS" = "Darwin"; then
       if ! which $cmd >/dev/null 2>&1; then
         package=${software_list[$cmd]}
         echo "$cmd is not installed. Installing..."
-        brew install $package >/dev/null 2>&1
+        brew install $package #>/dev/null 2>&1
       fi
     done
 
-    if ! type __git_complete &> /dev/null; then
+    if complete -p &>/dev/null; then
+        :
+        # echo "bash-completion is already installed"
+    else
         if command -v brew >/dev/null 2>&1; then
-            brew install bash-completion
+            brew install bash-completion >/dev/null 2>&1 && echo "bash-completion has been installed"
         fi
     fi
+
+    ####### Generic Colorizer ##################
+    # For diff, etc.
+    #source "`brew --prefix`/etc/grc.bashrc"
+
+
 
 elif test "$OS" = "Linux"; then
     :
