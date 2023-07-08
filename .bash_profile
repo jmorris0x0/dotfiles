@@ -399,9 +399,6 @@ export PATH="${HOME}/bin:${PATH}"
 
 export KUBERNETES_PROVIDER='aws'
 
-# Disabling this for now because it's causing issues with the PROMPT_COMMAND and my shell logging.
-# test -e "${HOME}/.iterm2_shell_integration.bash" && source "${HOME}/.iterm2_shell_integration.bash"
-
 # added by Anaconda3 4.2.0 installer
 #export PATH="$HOME/anaconda3/bin:$PATH"
 
@@ -424,9 +421,10 @@ function parkside() {
 # If these are missing, install with 'brew install coreutils'
 PATH="/usr/local/opt/inetutils/libexec/gnubin:$PATH"
 
-if [ -f ~/.iterm2_shell_integration.bash ]; then
-    source ~/.iterm2_shell_integration.bash
-fi
+# Disabling for now because messes with my PROMPT_COMMAND and my shell logging
+#if [ -f ~/.iterm2_shell_integration.bash ]; then
+#    source ~/.iterm2_shell_integration.bash
+#fi
 
 # For K8s
 source <(kubectl completion bash | sed s/kubectl/k/g)
