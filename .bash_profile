@@ -209,9 +209,14 @@ _bash_history_sync() {
 mkdir -p $HOME/.logs
 
 history_log() {
-  if [ "$(id -u)" -ne 0 ];
-    then echo "$(date "+%Y-%m-%d.%H:%M:%S") $(pwd) $(history 1)" >> ~/.logs/bash-history-$(date "+%Y-%m-%d").log;
-    fi
+  local exit_status=$?
+  if [ "$(id -u)" -ne 0 ]; then
+    local datetime=$(date -u +"%Y-%m-%dT%H:%M:%S%z")
+    local hostname=$(hostname)
+    local directory=$(pwd)
+    local last_command=$(fc -ln -1 | xargs)
+    echo "${datetime} ${hostname} ${directory} exit:${exit_status} ${last_command}" >> ~/.logs/bash-history-$(date "+%Y-%m-%d").log
+  fi
 }
 
 function logs() { grep -h  "$@" ~/.logs/*.log; }
@@ -242,6 +247,7 @@ function whichaws {
     echo "Region:  $region"
 }
 
+# I don't use this because it's too slow to run every prompt.
 function aws_prompt {
     if [ -n "$AWS_ACCESS_KEY_ID" ] && [ -x "$(command -v aws)" ]; then
         if [ -z "$LAST_AWS_ACCESS_KEY_ID" ] || \
@@ -257,6 +263,14 @@ function aws_prompt {
         fi
          echo -en "\033[0;35m<$CURRENT_AWS_ACCOUNT_ALIAS>"
     fi
+}
+
+function update_kubeconfigs {
+    clusters=$(aws eks list-clusters | jq -r .clusters[])
+
+    for cluster in $clusters; do
+        aws eks update-kubeconfig --region us-west-2 --name $cluster
+    done
 }
 
 #function get_token {
