@@ -283,9 +283,10 @@ function aws_profile() {
             echo "AWS profile set to: $AWS_PROFILE"
 
             # Check if AWS_PROFILE already exists in .bash_profile
-            if grep -q 'export AWS_PROFILE=' ~/.bash_profile ; then
+	    if grep -q '^export AWS_PROFILE=$' ~/.bash_profile ; then
+
                 # If it exists, update the existing AWS_PROFILE
-                sed -i.bak "s/export AWS_PROFILE=.*/export AWS_PROFILE=$profile/" ~/.bash_profile
+		sed -i.bak "s/^export AWS_PROFILE=.*$/export AWS_PROFILE=$profile/" ~/.bash_profile
             else
                 # If it does not exist, add a new AWS_PROFILE
                 echo "export AWS_PROFILE=$profile" >> ~/.bash_profile
