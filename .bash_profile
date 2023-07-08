@@ -214,7 +214,7 @@ history_log() {
     fi
 }
 
-function logs() { grep -H  "$@" ~/.logs/*.log; }
+function logs() { grep -h  "$@" ~/.logs/*.log; }
 
 # Might want to try this as well:
 # http://www.pointsoftware.ch/howto-bash-audit-command-logger/
