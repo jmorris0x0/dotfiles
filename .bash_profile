@@ -53,7 +53,7 @@ if test "$OS" = "Darwin"; then
     # Check bash version and update if less than 4.0
     if [ "${BASH_VERSINFO}" -lt 5 ]; then
         echo "Bash version is less than 5.0. Updating..."
-        brew install bash >/dev/null 2>&1
+        brew install bash #>/dev/null 2>&1
         echo "Please change the default shell to the new Bash and re-run this script."
         echo "You can do this by adding '/usr/local/bin/bash' to /etc/shells and then running 'chsh -s /usr/local/bin/bash'"
         exit 1
