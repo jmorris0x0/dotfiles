@@ -56,6 +56,7 @@ if test "$OS" = "Darwin"; then
         brew install bash #>/dev/null 2>&1
         echo "Please change the default shell to the new Bash and re-run this script."
         echo "You can do this by adding '/usr/local/bin/bash' to /etc/shells and then running 'chsh -s /usr/local/bin/bash'"
+        echo "iTerm2 path may also need to be changed."
         
     fi
 
