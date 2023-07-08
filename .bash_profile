@@ -209,7 +209,7 @@ _bash_history_sync() {
 mkdir -p $HOME/.logs
 
 history_log() {
-  local exit_status=$?
+  local exit_status=$1
   if [ "$(id -u)" -ne 0 ]; then
     local datetime=$(date -u +"%Y-%m-%dT%H:%M:%S%z")
     local hostname=$(hostname)
@@ -221,12 +221,11 @@ history_log() {
 
 function logs() { grep -h  "$@" ~/.logs/*.log; }
 
+# Write a copy of time-stamped history to a daily log file.
+PROMPT_COMMAND='history_log $?'
 # Might want to try this as well:
 # http://www.pointsoftware.ch/howto-bash-audit-command-logger/
 # https://debian-administration.org/article/543/Bash_eternal_history
-
-# Write a copy of time-stamped history to a daily log file.
-PROMPT_COMMAND=history_log
 
 ######## For AWS ##########################
 function whichaws {
