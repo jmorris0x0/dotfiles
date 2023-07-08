@@ -14,8 +14,6 @@ fi
 ######### Load system specific stuff #######
 OS="(uname -s)"
 if test "$OS" = "Darwin"; then
-    ######## For broken xvfb ###################
-    export EVENT_NOKQUEUE=1
     ######## Rasperrry pi dev
     alias pi='ssh pi@raspberrypi.local'
     ######### Architecture Flags ###############
@@ -43,35 +41,44 @@ if test "$OS" = "Darwin"; then
     function dockbash() { docker exec -it $@ bash; }
     function dockbashroot() { docker exec -u root -it $@ bash; }
 
-    # Software list
-    software_list=(
-      git
-      bash
-      coreutils
-      tree
-      tfenv
-      tflint
-      neovim
-      k9s
-      jq
-      helm
-      grc
-      grep
-      kubernetes-cli
-      watch
-      tflint
-      wget
-      tmux
-      ripgrep
-      awscli
-      eksctl
-    )   
+    # Check bash version and update if less than 4.0
+    if [ "${BASH_VERSINFO}" -lt 4 ]; then
+        echo "Bash version is less than 4.0. Updating..."
+        brew install bash >/dev/null 2>&1
+        echo "Please change the default shell to the new Bash and re-run this script."
+        echo "You can do this by adding '/usr/local/bin/bash' to /etc/shells and then running 'chsh -s /usr/local/bin/bash'"
+        exit 1
+    fi
+
+    declare -A software_list=(
+      [git]=git
+      [bash]=bash
+      [coreutils]=coreutils
+      [tree]=tree
+      [tfenv]=tfenv
+      [tflint]=tflint
+      [nvim]=neovim
+      [k9s]=k9s
+      [jq]=jq
+      [helm]=helm
+      [grc]=grc
+      [grep]=grep
+      [kubectl]=kubernetes-cli
+      [watch]=watch
+      [tflint]=tflint
+      [wget]=wget
+      [tmux]=tmux
+      [rg]=ripgrep
+      [aws]=awscli
+      [eksctl]=eksctl
+    )
 
     # Check each software and install if missing
-    for software in "${software_list[@]}"; do
-      if ! brew list --formula | grep -q "^$software\$" >/dev/null 2>&1; then
-        echo "$software is not installed. Installing..."
-        brew install $software >/dev/null 2>&1
+    for cmd in "${!software_list[@]}"; do
+      if ! which $cmd >/dev/null 2>&1; then
+        package=${software_list[$cmd]}
+        echo "$cmd is not installed. Installing..."
+        brew install $package >/dev/null 2>&1
       fi
     done
 
@@ -133,11 +140,11 @@ if [ -d "${HOME}/anaconda3" ]; then
 #    export PYTHONPATH="/usr/local/lib/python2.7/site-packages:$PYTHONPATH"
 fi
 
-if [[ $- == *i* ]]
-  then
-    :
-    python --version
-fi
+#if [[ $- == *i* ]]
+#  then
+#    :
+#    python --version
+#fi
 
 ######## Fancy Terminal Colors ##############
 MAGENTA="\[\033[0;35m\]"
@@ -349,7 +356,7 @@ test -e "${HOME}/.iterm2_shell_integration.bash" && source "${HOME}/.iterm2_shel
 
 cd $HOME/code
 
-eval "$(direnv hook bash)"
+# eval "$(direnv hook bash)"
 
 export GITHUB_TOKEN=''
                                         
@@ -373,12 +380,10 @@ source <(kubectl completion bash | sed s/kubectl/k/g)
 
 # Add ssh keys to path
 PATH="$PATH:$HOME/.ssh"
-
-HOMEBREW_GITHUB_API_TOKEN=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
 export PATH="/usr/local/sbin:$PATH"
 export PATH="/usr/local/opt/node@16/bin:$PATH"
 
-eval $(minikube docker-env)
+# eval $(minikube docker-env)
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
@@ -397,6 +402,7 @@ unset __conda_setup
 
 
 # For NVM
-export NVM_DIR="$HOME/.nvm"
-[ -s "/usr/local/opt/nvm/nvm.sh" ] && \. "/usr/local/opt/nvm/nvm.sh"  # This loads nvm
-[ -s "/usr/local/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/usr/local/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
+#export NVM_DIR="$HOME/.nvm"
+#[ -s "/usr/local/opt/nvm/nvm.sh" ] && \. "/usr/local/opt/nvm/nvm.sh"  # This loads nvm
+#[ -s "/usr/local/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/usr/local/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
+
