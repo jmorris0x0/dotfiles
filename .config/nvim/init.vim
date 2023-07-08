@@ -38,6 +38,15 @@ endfunction
 " Unmanaged plugin (manually installed and updated)
 "Plug '~/my-prototype-plugin'
 
+" For Telescope
+Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'make' }
+Plug 'nvim-lua/plenary.nvim'
+Plug 'nvim-telescope/telescope.nvim', { 'branch': '0.1.x' }
+
+""""""""""""""
+
+Plug 'leafgarland/typescript-vim'
+
 Plug 'kien/rainbow_parentheses.vim'
 
 Plug 'ratazzi/blackboard.vim'
@@ -104,8 +113,8 @@ if has('persistent_undo') && !isdirectory(expand('~').'/.vim/backups')
   set undofile
 endif
 
-let mapleader = "\<Space>"
-let maplocalleader = "\<Space>"
+let mapleader = '\<Space>'
+let maplocalleader = '\<Space>'
 
 " remap NERDComToggleComment
 map <leader>/ <leader>c<Space>
@@ -301,3 +310,8 @@ function! HiTabs()
     hi TAB ctermbg=blue ctermfg=red
 endfunction
 au BufEnter,BufRead * call HiTabs()
+
+
+" TypeScript settings
+autocmd FileType typescript setlocal shiftwidth=4 softtabstop=4 expandtab
+
