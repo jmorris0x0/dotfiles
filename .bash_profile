@@ -43,6 +43,38 @@ if test "$OS" = "Darwin"; then
     function dockbash() { docker exec -it $@ bash; }
     function dockbashroot() { docker exec -u root -it $@ bash; }
 
+    # Software list
+    software_list=(
+      git
+      bash
+      coreutils
+      tree
+      tfenv
+      tflint
+      neovim
+      k9s
+      jq
+      helm
+      grc
+      grep
+      kubernetes-cli
+      watch
+      tflint
+      wget
+      tmux
+      ripgrep
+      awscli
+      eksctl
+    )   
+
+    # Check each software and install if missing
+    for software in "${software_list[@]}"; do
+      if ! brew list --formula | grep -q "^$software\$" >/dev/null 2>&1; then
+        echo "$software is not installed. Installing..."
+        brew install $software >/dev/null 2>&1
+      fi
+    done
+
 elif test "$OS" = "Linux"; then
     :
 
