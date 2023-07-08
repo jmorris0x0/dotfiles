@@ -399,7 +399,8 @@ export PATH="${HOME}/bin:${PATH}"
 
 export KUBERNETES_PROVIDER='aws'
 
-test -e "${HOME}/.iterm2_shell_integration.bash" && source "${HOME}/.iterm2_shell_integration.bash"
+# Disabling this for now because it's causing issues with the PROMPT_COMMAND and my shell logging.
+# test -e "${HOME}/.iterm2_shell_integration.bash" && source "${HOME}/.iterm2_shell_integration.bash"
 
 # added by Anaconda3 4.2.0 installer
 #export PATH="$HOME/anaconda3/bin:$PATH"
