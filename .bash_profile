@@ -272,6 +272,33 @@ function update_kubeconfigs {
     done
 }
 
+function aws_profile() {
+    # List all available AWS profiles
+    echo "Available AWS profiles:"
+    profiles=$(grep '\[profile ' ~/.aws/config | tr -d '[]' | awk '{print $2}')
+    select profile in $profiles; do
+        if [ -n "$profile" ]; then
+            # Export the AWS profile to the current shell
+            export AWS_PROFILE=$profile
+            echo "AWS profile set to: $AWS_PROFILE"
+
+            # Check if AWS_PROFILE already exists in .bash_profile
+            if grep -q 'export AWS_PROFILE=' ~/.bash_profile ; then
+                # If it exists, update the existing AWS_PROFILE
+                sed -i.bak "s/export AWS_PROFILE=.*/export AWS_PROFILE=$profile/" ~/.bash_profile
+            else
+                # If it does not exist, add a new AWS_PROFILE
+                echo "export AWS_PROFILE=$profile" >> ~/.bash_profile
+            fi
+
+            echo "AWS profile updated in .bash_profile"
+            break
+        else
+            echo "Invalid option"
+        fi
+    done
+}
+
 #function get_token {
     #credetials=$(aws sts assume-role --role-arn=$TF_VAR_config_role_arn --role-session=cli)
     #AccessKeyId=$(echo $caller | jq -r '.Credentials.AccessKeyId')
