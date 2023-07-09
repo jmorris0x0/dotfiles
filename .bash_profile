@@ -14,17 +14,10 @@ test -f ~/.bashrc && source ~/.bashrc
 ######### Load system specific stuff #######
 OS="$(uname -s)"
 if test "$OS" = "Darwin"; then
-    ######## Finder defaults ##################
-    # Speed up that trackpad:
-    defaults write -g com.apple.trackpad.scaling 5
-    # Don't save files to the cloud:
-    defaults write NSGlobalDomain "NSDocumentSaveNewDocumentsToCloud" -bool "false"
-    # Show path
-    defaults write com.apple.finder "_FXShowPosixPathInTitle" -bool "true"
-    # Show hidden files:
-    defaults write com.apple.finder "AppleShowAllFiles" -bool "true"
-    # Show filename extensions:
-    defaults write NSGlobalDomain "AppleShowAllExtensions" -bool "true"
+
+    if [ ! -f $HOME/.mac_is_set_up ]; then
+        source $HOME/.mac_set_up
+    fi
 
     ######## Rasperrry pi dev
     alias pi='ssh pi@raspberrypi.local'
@@ -49,58 +42,6 @@ if test "$OS" = "Darwin"; then
 
     function dockbash() { docker exec -it $@ bash; }
     function dockbashroot() { docker exec -u root -it $@ bash; }
-
-    # Check bash version and update if less than 5.0
-    if [ "${BASH_VERSINFO}" -lt 5 ]; then
-        echo "Bash version is less than 5.0. Updating..."
-        brew install bash #>/dev/null 2>&1
-        echo "Please change the default shell to the new Bash and re-run this script."
-        echo "You can do this by adding '/usr/local/bin/bash' to /etc/shells and then running 'chsh -s /usr/local/bin/bash'"
-        echo "iTerm2 path may also need to be changed."
-        
-    fi
-
-    declare -A software_list=(
-      [git]=git
-      [bash]=bash
-      #[coreutils]=coreutils
-      [tree]=tree
-      [tfenv]=tfenv
-      [tflint]=tflint
-      [nvim]=neovim
-      [k9s]=k9s
-      [jq]=jq
-      [helm]=helm
-      [grc]=grc
-      [grep]=grep
-      [kubectl]=kubernetes-cli
-      [watch]=watch
-      [tflint]=tflint
-      [wget]=wget
-      [tmux]=tmux
-      [rg]=ripgrep
-      [aws]=awscli
-      [eksctl]=eksctl
-      [fzf]=fzf
-    )
-
-    # Check each software and install if missing
-    for cmd in "${!software_list[@]}"; do
-      if ! which $cmd >/dev/null 2>&1; then
-        package=${software_list[$cmd]}
-        echo "$cmd is not installed. Installing..."
-        brew install $package #>/dev/null 2>&1
-      fi
-    done
-
-    if complete -p &>/dev/null; then
-        :
-        # echo "bash-completion is already installed"
-    else
-        if command -v brew >/dev/null 2>&1; then
-            brew install bash-completion >/dev/null 2>&1 && echo "bash-completion has been installed"
-        fi
-    fi
 
     ####### Generic Colorizer ##################
     # For diff, etc.
