@@ -1,0 +1,8 @@
+* Navigate between panes with [Ctrl] + hjkl
+
+* tmux:
+  Create new panel vertical:
+  [Ctrl] + a then |
+  Create new panel horizontal:
+  [Ctrl] + a then -
+
