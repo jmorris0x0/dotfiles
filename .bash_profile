@@ -15,8 +15,8 @@ test -f ~/.bashrc && source ~/.bashrc
 OS="$(uname -s)"
 if test "$OS" = "Darwin"; then
 
-    if [ ! -f $HOME/.mac_is_set_up ]; then
-        source $HOME/.mac_set_up
+    if [ ! -f $HOME/.mac_is_setup ]; then
+        source $HOME/.mac_setup
     fi
 
     ######## Rasperrry pi dev
