@@ -48,7 +48,6 @@ declare -A software_list=(
 )
 
 # Check each software and install if missing
-# Perhaps later only check this once a day by using a file.
 for cmd in "${!software_list[@]}"; do
   if ! which $cmd >/dev/null 2>&1; then
     package=${software_list[$cmd]}

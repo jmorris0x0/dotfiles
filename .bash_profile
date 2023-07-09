@@ -19,8 +19,6 @@ if test "$OS" = "Darwin"; then
         source $HOME/.mac_setup
     fi
 
-    ######## Rasperrry pi dev
-    alias pi='ssh pi@raspberrypi.local'
     ######### Architecture Flags ###############
     export ARCHFLAGS="-arch x86_64"
 
@@ -29,12 +27,11 @@ if test "$OS" = "Darwin"; then
 
     ############## ALIASES:######################
     alias top='top -s3 -o cpu -R -F'
-
-    #alias connect="lein repl :connect localhost:7888"
-
     alias project=". project"
     alias localip="ipconfig getifaddr en0"
+    alias pi='ssh pi@raspberrypi.local' # Use a mosh server next time.
 
+    # TODO: Refactor to use minikube or whatever that isn't Docker.
     export DOCKER_HOST=unix:///var/run/docker.sock
 
     # This is so that docker instance can reach localhost postgresql. Not sure why I addeed thing above.
@@ -45,9 +42,8 @@ if test "$OS" = "Darwin"; then
 
     ####### Generic Colorizer ##################
     # For diff, etc.
+    # TODO: Fix this. I'm not sourcing the right thing.
     #source "`brew --prefix`/etc/grc.bashrc"
-
-
 
 elif test "$OS" = "Linux"; then
     :
@@ -368,14 +364,6 @@ cd $HOME/code
 # eval "$(direnv hook bash)"
 
 export GITHUB_TOKEN=''
-                                        
-function parkside() {
-    if [[ $@ == "update" ]]; then
-        command docker pull quay.io/parkside-securities/parkside-cli
-    else
-        command docker run -e "GITHUB_TOKEN=${GITHUB_TOKEN}" quay.io/parkside-securities/parkside-cli:latest "$@"
-    fi
-}
 
 # For gnu internet utilities. They are prepended with 'g' but this will fix that:
 # If these are missing, install with 'brew install coreutils'
@@ -417,6 +405,5 @@ unset __conda_setup
 #export NVM_DIR="$HOME/.nvm"
 #[ -s "/usr/local/opt/nvm/nvm.sh" ] && \. "/usr/local/opt/nvm/nvm.sh"  # This loads nvm
 #[ -s "/usr/local/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/usr/local/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
-
 
 export BASH_SILENCE_DEPRECATION_WARNING=1
