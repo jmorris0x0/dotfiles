@@ -3,13 +3,13 @@
 test -f ~/.bashrc && source ~/.bashrc
 
 ####### Load tmux #########################
-# if [ -x "$(command -v tmux)" ] && \
-#    [ -n "$PS1" ] && \
-#    [[ ! "$TERM" =~ screen ]] && \
-#    [[ ! "$TERM" =~ tmux ]] && \
-#    [ -z "$TMUX" ]; then
-#   exec tmux
-# fi
+if [ -x "$(command -v tmux)" ] && \
+   [ -n "$PS1" ] && \
+   [[ ! "$TERM" =~ screen ]] && \
+   [[ ! "$TERM" =~ tmux ]] && \
+   [ -z "$TMUX" ]; then
+  exec tmux
+fi
 
 ######### Load system specific stuff #######
 OS="$(uname -s)"
@@ -20,7 +20,8 @@ if test "$OS" = "Darwin"; then
     fi
 
     ######### Architecture Flags ###############
-    export ARCHFLAGS="-arch x86_64"
+    # TODO: Update this when using M2 Mac
+    #export ARCHFLAGS="-arch x86_64"
 
     ######## For Homebrew ######################
     export PATH="/usr/local/bin:/usr/local/sbin:$PATH"
