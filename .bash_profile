@@ -15,7 +15,7 @@ test -f ~/.bashrc && source ~/.bashrc
 OS="$(uname -s)"
 if test "$OS" = "Darwin"; then
 
-    if [ ! -f $HOME/.mac_is_setup ]; then
+    if [ ! -f $HOME/.mac_setup_complete ]; then
         source $HOME/.mac_setup
     fi
 
