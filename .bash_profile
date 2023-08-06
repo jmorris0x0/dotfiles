@@ -66,6 +66,7 @@ alias vim='nvim'
 alias tf='terraform'
 alias tfshortplan='tf plan -no-color | grep "replaced\|destroyed\|created\|forces\|updated" |grep -v "created_at"'
 alias k='kubectl'
+alias diff='diff --color'
 
 ###### Always use color output for `ls` #########
 if ls --color > /dev/null 2>&1; then # GNU `ls`

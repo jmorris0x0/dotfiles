@@ -26,6 +26,7 @@ fi
 declare -A software_list=(
   [git]=git
   [bash]=bash
+  delta[]=git-delta
   #[coreutils]=coreutils
   [tree]=tree
   [tfenv]=tfenv
@@ -64,5 +65,11 @@ else
         brew install bash-completion >/dev/null 2>&1 && echo "bash-completion has been installed"
     fi
 fi
+
+echo ".DS_Store" >> ~/.gitignore_global
+echo "._.DS_Store" >> ~/.gitignore_global
+echo "**/.DS_Store" >> ~/.gitignore_global
+echo "**/._.DS_Store" >> ~/.gitignore_global
+git config --global core.excludesfile ~/.gitignore_global
 
 touch $HOME/.mac_setup_complete
