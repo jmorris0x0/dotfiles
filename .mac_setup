@@ -11,7 +11,13 @@ defaults write com.apple.finder "_FXShowPosixPathInTitle" -bool "true"
 defaults write com.apple.finder "AppleShowAllFiles" -bool "true"
 # Show filename extensions:
 defaults write NSGlobalDomain "AppleShowAllExtensions" -bool "true"
-
+# Disable smart quotes as they’re annoying when typing code
+defaults write NSGlobalDomain NSAutomaticQuoteSubstitutionEnabled -bool false
+# Disable smart dashes as they’re annoying when typing code
+defaults write NSGlobalDomain NSAutomaticDashSubstitutionEnabled -bool false
+# Privacy: don’t send search queries to Apple
+defaults write com.apple.Safari UniversalSearchEnabled -bool false
+defaults write com.apple.Safari SuppressSearchSuggestions -bool true
 
 # Check bash version and update if less than 5.0
 if [ "${BASH_VERSINFO}" -lt 5 ]; then
