@@ -1,5 +1,14 @@
 #!/usr/bin/env bash
 
+# Check if 'brew' command doesn't exist
+if ! command -v brew > /dev/null 2>&1; then
+    echo "Warning: Homebrew is not installed. Please install it first."
+    echo "Use localized version if @Apple."
+    exit 1
+else
+    echo "Homebrew is already installed."
+fi
+
 ######## Finder defaults ##################
 # Speed up that trackpad:
 defaults write -g com.apple.trackpad.scaling 5
@@ -30,28 +39,30 @@ if [ "${BASH_VERSINFO}" -lt 5 ]; then
 fi
 
 declare -A software_list=(
-  [git]=git
-  [bash]=bash
-  delta[]=git-delta
   #[coreutils]=coreutils
-  [tree]=tree
-  [tfenv]=tfenv
-  [tflint]=tflint
-  [nvim]=neovim
-  [k9s]=k9s
-  [jq]=jq
-  [helm]=helm
-  [grc]=grc
-  [grep]=grep
-  [kubectl]=kubernetes-cli
-  [watch]=watch
-  [tflint]=tflint
-  [wget]=wget
-  [tmux]=tmux
-  [rg]=ripgrep
   [aws]=awscli
+  [bash]=bash
+  [curl]=curl
   [eksctl]=eksctl
   [fzf]=fzf
+  [git]=git
+  [grc]=grc
+  [grep]=grep
+  [helm]=helm
+  [jq]=jq
+  [k9s]=k9s
+  [kubectl]=kubernetes-cli
+  [nvim]=neovim
+  [rg]=ripgrep
+  [rubix]=rubix
+  [tfenv]=tfenv
+  [tflint]=tflint
+  [tflint]=tflint
+  [tmux]=tmux
+  [tree]=tree
+  [watch]=watch
+  [wget]=wget
+  [delta]=git-delta
 )
 
 # Check each software and install if missing
