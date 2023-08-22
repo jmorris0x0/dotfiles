@@ -24,7 +24,24 @@ if test "$OS" = "Darwin"; then
     #export ARCHFLAGS="-arch x86_64"
 
     ######## For Homebrew ######################
-    export PATH="/usr/local/bin:/usr/local/sbin:$PATH"
+    arch=$(uname -m)
+
+    # If APPLE is unset or empty, default to 0 (false)
+    APPLE=0
+
+    if [[ $APPLE -eq 1 && $arch == "x86_64" ]]; then
+        BREW_PREFIX="/opt/brew"
+    elif [[ $arch == "arm64" ]]; then
+        BREW_PREFIX="/opt/homebrew"
+    else
+        BREW_PREFIX="/usr/local"
+    fi
+
+    export PATH="$BREW_PREFIX/bin:$BREW_PREFIX/sbin:$PATH"
+
+    if [[ $APPLE -eq 1 ]]; then
+        source "$BREW_PREFIX/etc/bash_completion.d/rubix"
+    fi
 
     ############## ALIASES:######################
     alias top='top -s3 -o cpu -R -F'
@@ -82,34 +99,8 @@ export LS_COLORS='no=00:fi=00:di=01;34:ln=01;36:pi=40;33:so=01;35:do=01;35:bd=40
 ############ PYTHON STUFF ##################
 export CONDA_DEFAULT_ENV="py310"
 
-if [ -d "${HOME}/anaconda3" ]; then
-    export PATH="${HOME}/anaconda/bin:$PATH"
-    #Use for python 3.5:
-    export PATH="${HOME}/anaconda3/envs/${CONDA_DEFAULT_ENV}/bin:${HOME}/anaconda3/bin:${PATH}"
-    # To create and environment:
-    # conda update conda
-    # conda create -n py35 python=3.5 anaconda
-    # To activate this environment, use:
-    source activate $CONDA_DEFAULT_ENV &>/dev/null
-    #
-    # To deactivate this environment, use:
-    # $ source deactivate
 
-    # To install stuff:
-    # conda install -n py33 statsmodels
-    # or
-    # pip install coverage
 
-    # conda info
-#elif [ -x "$(command -v brew)" ]; then
-#    export PYTHONPATH="/usr/local/lib/python2.7/site-packages:$PYTHONPATH"
-fi
-
-#if [[ $- == *i* ]]
-#  then
-#    :
-#    python --version
-#fi
 
 ######## Fancy Terminal Colors ##############
 MAGENTA="\[\033[0;35m\]"
@@ -331,7 +322,7 @@ shopt -s checkwinsize
 # Enable syntax-highlighting in less.
 # brew install source-highlight
 # First, add these two lines to ~/.bashrc
-export LESSOPEN="| /usr/local/bin/src-hilite-lesspipe.sh %s"
+export LESSOPEN="| $BREW_PREFIX/bin/src-hilite-lesspipe.sh %s"
 export LESS=" -R "
 alias less='less -m -g -i --underline-special --SILENT'
 alias more='less'
@@ -369,7 +360,8 @@ export GITHUB_TOKEN=''
 
 # For gnu internet utilities. They are prepended with 'g' but this will fix that:
 # If these are missing, install with 'brew install coreutils'
-PATH="/usr/local/opt/inetutils/libexec/gnubin:$PATH"
+PATH="$BREW_PREFIX/opt/inetutils/libexec/gnubin:$PATH"
+
 
 # Disabling for now because messes with my PROMPT_COMMAND and my shell logging
 #if [ -f ~/.iterm2_shell_integration.bash ]; then
@@ -382,8 +374,8 @@ source <(kubectl completion bash | sed s/kubectl/k/g)
 
 # Add ssh keys to path
 PATH="$PATH:$HOME/.ssh"
-export PATH="/usr/local/sbin:$PATH"
-export PATH="/usr/local/opt/node@16/bin:$PATH"
+export PATH="$BREW_PREFIX/sbin:$PATH"
+export PATH="$BREW_PREFIX/opt/node@16/bin:$PATH"
 
 # eval $(minikube docker-env)
 
