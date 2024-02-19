@@ -27,7 +27,7 @@ if test "$OS" = "Darwin"; then
     arch=$(uname -m)
 
     # If APPLE is unset or empty, default to 0 (false)
-    APPLE=0
+    APPLE=1
 
     if [[ $APPLE -eq 1 && $arch == "x86_64" ]]; then
         BREW_PREFIX="/opt/brew"
@@ -381,14 +381,14 @@ export PATH="$BREW_PREFIX/opt/node@16/bin:$PATH"
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/Users/jonathan/opt/anaconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+__conda_setup="$('/Users/jonathanmorris/anaconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
 if [ $? -eq 0 ]; then
     eval "$__conda_setup"
 else
-    if [ -f "/Users/jonathan/opt/anaconda3/etc/profile.d/conda.sh" ]; then
-        . "/Users/jonathan/opt/anaconda3/etc/profile.d/conda.sh"
+    if [ -f "/Users/jonathanmorris/anaconda3/etc/profile.d/conda.sh" ]; then
+        . "/Users/jonathanmorris/anaconda3/etc/profile.d/conda.sh"
     else
-        export PATH="/Users/jonathan/opt/anaconda3/bin:$PATH"
+        export PATH="/Users/jonathanmorris/anaconda3/bin:$PATH"
     fi
 fi
 unset __conda_setup
@@ -401,3 +401,5 @@ unset __conda_setup
 #[ -s "/usr/local/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/usr/local/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
 
 export BASH_SILENCE_DEPRECATION_WARNING=1
+export PATH="/opt/brew/opt/openjdk/bin:$PATH"
+export JAVA_HOME="/opt/brew/Cellar/openjdk/20.0.1/libexec/openjdk.jdk/Contents/Home"

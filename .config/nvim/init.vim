@@ -131,6 +131,12 @@ if &t_Co > 2 || has("gui_running")
   syntax on
 endif
 
+" Stop GitGutter from appears and disappearing
+set signcolumn=yes
+highlight SignColumn guibg=black ctermbg=black
+highlight GitGutterAdd guifg=green ctermfg=green
+highlight GitGutterDelete guifg=red ctermfg=red
+highlight GitGutterChange guifg=yellow ctermfg=yellow
 
 "if has('gui_running')
 "    colorscheme ratazzi
