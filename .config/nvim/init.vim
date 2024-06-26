@@ -324,3 +324,10 @@ autocmd FileType typescript setlocal shiftwidth=4 softtabstop=4 expandtab
 " Make it so that I can navigate big files that are a single line
 nnoremap j gj
 nnoremap k gk
+" Scroll down
+noremap <silent> <ScrollWheelDown> gj
+noremap <silent> <C-ScrollWheelDown> 3gj
+" Scroll up
+noremap <silent> <ScrollWheelUp> gk
+noremap <silent> <C-ScrollWheelUp> 3gk
+
