@@ -321,3 +321,6 @@ au BufEnter,BufRead * call HiTabs()
 " TypeScript settings
 autocmd FileType typescript setlocal shiftwidth=4 softtabstop=4 expandtab
 
+" Make it so that I can navigate big files that are a single line
+nnoremap j gj
+nnoremap k gk

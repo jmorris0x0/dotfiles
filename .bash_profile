@@ -403,3 +403,8 @@ unset __conda_setup
 export BASH_SILENCE_DEPRECATION_WARNING=1
 export PATH="/opt/brew/opt/openjdk/bin:$PATH"
 export JAVA_HOME="/opt/brew/Cellar/openjdk/20.0.1/libexec/openjdk.jdk/Contents/Home"
+
+export PATH="/opt/brew/opt/curl/bin:$PATH"
+
+eval "$(direnv hook bash)"
+
