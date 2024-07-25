@@ -325,9 +325,9 @@ autocmd FileType typescript setlocal shiftwidth=4 softtabstop=4 expandtab
 nnoremap j gj
 nnoremap k gk
 " Scroll down
-noremap <silent> <ScrollWheelDown> gj
-noremap <silent> <C-ScrollWheelDown> 3gj
+"noremap <silent> <ScrollWheelDown> gj
+"noremap <silent> <C-ScrollWheelDown> 3gj
 " Scroll up
-noremap <silent> <ScrollWheelUp> gk
-noremap <silent> <C-ScrollWheelUp> 3gk
+"noremap <silent> <ScrollWheelUp> gk
+"noremap <silent> <C-ScrollWheelUp> 3gk
 

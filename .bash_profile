@@ -1,4 +1,5 @@
 ######### Source ###########################
+#
 # Load .bashrc if it exists
 test -f ~/.bashrc && source ~/.bashrc
 
@@ -163,7 +164,7 @@ history_log() {
     local datetime=$(date -u +"%Y-%m-%dT%H:%M:%S%z")
     local hostname=$(hostname)
     local directory=$(pwd)
-    local last_command=$(fc -ln -1 | xargs)
+    local last_command=$(fc -ln -1 | sed 's/^[[:space:]]*//')
     echo "${datetime} ${hostname} ${directory} exit:${exit_status} ${last_command}" >> ~/.logs/bash-history-$(date "+%Y-%m-%d").log
   fi
 }
