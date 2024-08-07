@@ -339,10 +339,12 @@ xterm*|rxvt*)
 esac
 
 ###### THIS STUFF SHOULD BE LAST   ############
-# Switch your environment for AWS.
+# Switch your environment for AWS and Github
 if [ -f "$HOME/.aws/source-me.sh" ]; then
     . "$HOME/.aws/source-me.sh"
 fi
+
+[ -f "$HOME/.credentials" ] && source "$HOME/.credentials"
 
 # Stuff in my bin folder is always first
 export PATH="${HOME}/bin:${PATH}"
@@ -356,8 +358,6 @@ mkdir -p $HOME/code
 cd $HOME/code
 
 # eval "$(direnv hook bash)"
-
-export GITHUB_TOKEN=''
 
 # For gnu internet utilities. They are prepended with 'g' but this will fix that:
 # If these are missing, install with 'brew install coreutils'
