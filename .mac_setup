@@ -63,6 +63,8 @@ declare -A software_list=(
   [watch]=watch
   [wget]=wget
   [delta]=git-delta
+  [yq]=yq
+  [yamllint]=yamllint
 )
 
 # Check each software and install if missing
