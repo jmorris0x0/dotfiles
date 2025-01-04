@@ -138,6 +138,12 @@ highlight GitGutterAdd guifg=green ctermfg=green
 highlight GitGutterDelete guifg=red ctermfg=red
 highlight GitGutterChange guifg=yellow ctermfg=yellow
 
+" Lighten line numbers
+highlight LineNr ctermfg=244 guifg=#9e9e9e
+
+" Lighten comments
+highlight Comment ctermfg=244 guifg=#9e9e9e
+
 "if has('gui_running')
 "    colorscheme ratazzi
 "elseif &t_Co > 255 
