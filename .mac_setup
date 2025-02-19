@@ -65,6 +65,7 @@ declare -A software_list=(
   [delta]=git-delta
   [yq]=yq
   [yamllint]=yamllint
+  [yamlfmt]=yamlfmt
 )
 
 # Check each software and install if missing
